@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["Users"]
+}
+
+model User {
+  userId       Int       @id @default(autoincrement()) @map(name: "user_id")
+  documentType String    @map(name: "document_type")
+  dni          String    @unique @map(name: "dni")
+  name         String    @map(name: "name")
+  surnames     String    @map(name: "surnames")
+  phone        String?   @map(name: "phone")
+  address      String?   @map(name: "address")
+  email        String?   @map(name: "email")
+  photo        String?   @map(name: "photo")
+  birthDate    DateTime? @map(name: "birth_date")
+
+  access Access[]
+  doctor Doctor[]
+
+  @@map(name: "user")
+  @@schema("Users")
+}
+
+model Access {
+  accessId     Int       @id @default(autoincrement()) @map(name: "access_id")
+  userId       Int       @map(name: "user_id")
+  username     String    @unique @map(name: "username")
+  password     String    @map(name: "password")
+  status       String?   @default("offline")
+  active       Boolean?
+  user         User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  lastSession  DateTime? @default(now()) @map("last_session")
+  createAt     DateTime  @default(now()) @map("create_at")
+  temporalCode String?   @map("temporal_code")
+  roleId       Int?      @map(name: "role_id")
+  role         Role?     @relation(fields: [roleId], references: [roleId])
+
+  @@map(name: "access")
+  @@schema("Users")
+}
+
+model Role {
+  roleId     Int         @id @default(autoincrement()) @map(name: "role_id")
+  name       String      @unique @map(name: "name")
+  user       Access[]
+  roleXForms RoleXForm[]
+
+  @@map(name: "role")
+  @@schema("Users")
+}
+
+model Doctor {
+  doctorId  Int         @id @default(autoincrement()) @map(name: "doctor_id")
+  specialty String      @map(name: "specialty")
+  userId    Int         @map(name: "user_id")
+  user      User        @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  status    Boolean     @default(false) @map(name: "status")
+  cmp       String      @map(name: "cmp")
+  rne       String      @map(name: "rne")
+  timetable Timetable[]
+  tariff    Tariff[]
+
+  @@map(name: "doctor")
+  @@schema("Users")
+}
+
+model Timetable {
+  timetableId Int    @id @default(autoincrement()) @map(name: "timetable_id")
+  userId      Int    @map(name: "user_id")
+  weekday     String @map(name: "weekday")
+  startTime   String @map(name: "start_time")
+  endTime     String @map(name: "end_time")
+  doctorId    Int    @map(name: "doctor_id")
+  doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
+
+  @@map(name: "timetable")
+  @@schema("Users")
+}
+
+model Tariff {
+  tariffId    Int    @id @default(autoincrement()) @map(name: "tariff_id")
+  doctorId    Int    @map(name: "doctor_id")
+  doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
+  codeTariff  String @unique @map(name: "code_tariff")
+  clinicPrice Int    @map(name: "clinic_price")
+  doctorPrice Int    @map(name: "doctor_price")
+  discount    Int?   @map(name: "discount")
+  totalTariff Int    @map(name: "total_Tariff")
+
+  @@map(name: "tariff")
+  @@schema("Users")
+}
+
+model Form {
+  formId     Int         @id @default(autoincrement()) @map(name: "form_id")
+  name       String      @unique @map(name: "name")
+  roleXForms RoleXForm[]
+
+  @@map(name: "form")
+  @@schema("Users")
+}
+
+model RoleXForm {
+  roleXFormId Int  @id @default(autoincrement()) @map(name: "role_x_form_id")
+  roleId      Int  @map(name: "role_id")
+  formId      Int  @map(name: "form_id")
+  role        Role @relation(fields: [roleId], references: [roleId])
+  form        Form @relation(fields: [formId], references: [formId])
+
+  @@map(name: "role_x_form")
+  @@schema("Users")
+}
+
+// model Category {
+//   categoryId Int    @id @default(autoincrement()) @map(name: "category_id")
+//   name       String @unique @map(name: "name")
+
+//   @@map(name: "category")
+//   @@schema("Users")
+// }

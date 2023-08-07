@@ -1,0 +1,48 @@
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import prisma from "./connection/prisma";
+
+//Routes
+import { useRouter } from "./routes";
+
+const app = express();
+const api_url: string = <string>process.env.API;
+const cli_origin: string = <string>process.env.CLIURL;
+
+//Settings
+app.set("port", process.env.PORT || 3000);
+app.set("json spaces", 2);
+
+//Middleware
+app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// Configurar CORS
+const corsOptions = {
+  origin: cli_origin, // Cambiar a la URL permitida para las solicitudes
+  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
+  allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
+};
+app.use(cors(corsOptions));
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, DELETE,OPTIONS"
+//   );
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
+
+//Routes
+try {
+  useRouter(app, api_url);
+} catch (error) {
+  console.log(error);
+} finally {
+  prisma.instance.$disconnect();
+}
+
+export default app;
