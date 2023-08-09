@@ -26,15 +26,6 @@ const corsOptions = {
     allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
 };
 app.use((0, cors_1.default)(corsOptions));
-// app.use(function (req, res, next) {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, DELETE,OPTIONS"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
 //Routes
 try {
     (0, routes_1.useRouter)(app, api_url);

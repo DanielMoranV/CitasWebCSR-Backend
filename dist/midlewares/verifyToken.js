@@ -24,10 +24,8 @@ exports.default = (req, res, next) => {
         }
         const decoded = jsonwebtoken_1.default.decode(token);
         if (decoded) {
-            console.log("todo bien midlewares", decoded.username);
             // Almacenar la información del usuario en req.user
             res.locals.user = decoded.username;
-            console.log("variable user: ", res.locals.user);
         }
         next();
     });
