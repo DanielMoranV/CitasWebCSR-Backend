@@ -23,6 +23,8 @@ model User {
   email        String?   @map(name: "email")
   photo        String?   @map(name: "photo")
   birthDate    DateTime? @map(name: "birth_date")
+  sex          String?   @map(name: "sex")
+  civilStatus  String?   @map(name: "civil_status")
 
   access Access[]
   doctor Doctor[]

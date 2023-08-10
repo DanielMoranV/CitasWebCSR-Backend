@@ -19,7 +19,7 @@ export async function getAccess(): Promise<Access[]> {
   });
 }
 
-export async function createAccessUser(data: Access): Promise<any> {
+export async function createAccessUser(data: any): Promise<any> {
   const newAccessUser = await prisma.instance.access.create({ data });
   return newAccessUser;
 }

@@ -10,7 +10,7 @@ export async function useRouter(app: Express, api_url: string) {
   const router = Router();
 
   // Usuarios
-  router.use("/users", verifyToken, user);
+  router.use("/users", user);
   // Accesos
   router.use("/access", access);
   app.use(api_url, router);

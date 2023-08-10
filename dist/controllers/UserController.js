@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errormessagebycode_1 = require("../midlewares/errormessagebycode");
+const strings_1 = require("../utils/strings");
 const UserRepository_1 = require("../repository/UserRepository");
 const response_1 = require("../utils/response");
 const AccessRepository_1 = require("../repository/AccessRepository");
@@ -42,6 +43,35 @@ class UserHandler {
             const data = req.body;
             try {
                 const newUser = yield (0, UserRepository_1.createUser)(data);
+                const message = "Operación exitosa Registro Creado";
+                (0, response_1.success)({ res, data: newUser, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    // Crear nuevo paciente con accesos
+    createPatients(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataPatients = req.body;
+            const username = req.body.dni;
+            try {
+                const newUser = yield (0, UserRepository_1.createUser)(dataPatients);
+                const user = yield (0, UserRepository_1.userBydni)(username);
+                const password = yield (0, strings_1.hashPassword)(username);
+                if (user) {
+                    let accesPatients = {
+                        username,
+                        userId: user.userId,
+                        password,
+                        createAt: new Date(),
+                        roleId: 4,
+                    };
+                    console.log(accesPatients);
+                    yield (0, AccessRepository_1.createAccessUser)(accesPatients);
+                }
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newUser, message });
             }

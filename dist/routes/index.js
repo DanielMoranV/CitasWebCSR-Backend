@@ -15,14 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useRouter = void 0;
 const express_1 = require("express");
 const user_1 = __importDefault(require("./user"));
-const verifyToken_1 = __importDefault(require("../midlewares/verifyToken"));
 const access_1 = __importDefault(require("./access"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
         const router = (0, express_1.Router)();
         // Usuarios
-        router.use("/users", verifyToken_1.default, user_1.default);
+        router.use("/users", user_1.default);
         // Accesos
         router.use("/access", access_1.default);
         app.use(api_url, router);

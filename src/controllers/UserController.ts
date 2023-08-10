@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
+import { hashPassword } from "../utils/strings";
 import {
   userBydni,
   createUser,
@@ -8,7 +9,7 @@ import {
   deleteUser,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
-import { accessBydni } from "../repository/AccessRepository";
+import { accessBydni, createAccessUser } from "../repository/AccessRepository";
 
 // Datos de empleados
 // --------------------------------
@@ -36,6 +37,34 @@ class UserHandler {
     const data = req.body;
     try {
       const newUser = await createUser(data);
+      const message = "Operación exitosa Registro Creado";
+      success({ res, data: newUser, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  // Crear nuevo paciente con accesos
+  public async createPatients(req: Request, res: Response): Promise<void> {
+    const dataPatients = req.body;
+    const username = req.body.dni;
+
+    try {
+      const newUser = await createUser(dataPatients);
+      const user = await userBydni(username);
+      const password = await hashPassword(username);
+      if (user) {
+        let accesPatients = {
+          username,
+          userId: user.userId,
+          password,
+          createAt: new Date(),
+          roleId: 4,
+        };
+        console.log(accesPatients);
+        await createAccessUser(accesPatients);
+      }
+
       const message = "Operación exitosa Registro Creado";
       success({ res, data: newUser, message });
     } catch (error: any) {

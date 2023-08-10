@@ -12,7 +12,9 @@ CREATE TABLE "Users"."user" (
     "address" TEXT,
     "email" TEXT,
     "photo" TEXT,
-    "role_id" INTEGER,
+    "birth_date" TIMESTAMP(3),
+    "sex" TEXT,
+    "civil_status" TEXT,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("user_id")
 );
@@ -28,6 +30,7 @@ CREATE TABLE "Users"."access" (
     "last_session" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "create_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "temporal_code" TEXT,
+    "role_id" INTEGER,
 
     CONSTRAINT "access_pkey" PRIMARY KEY ("access_id")
 );
@@ -110,10 +113,10 @@ CREATE UNIQUE INDEX "tariff_code_tariff_key" ON "Users"."tariff"("code_tariff");
 CREATE UNIQUE INDEX "form_name_key" ON "Users"."form"("name");
 
 -- AddForeignKey
-ALTER TABLE "Users"."user" ADD CONSTRAINT "user_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Users"."role"("role_id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Users"."access" ADD CONSTRAINT "access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Users"."access" ADD CONSTRAINT "access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Users"."access" ADD CONSTRAINT "access_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Users"."role"("role_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Users"."doctor" ADD CONSTRAINT "doctor_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "Users"."user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
