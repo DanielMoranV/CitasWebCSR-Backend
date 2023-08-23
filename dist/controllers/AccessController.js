@@ -119,7 +119,9 @@ class AccesHandler {
             try {
                 const username = req.params.username;
                 let data = req.body;
-                data.password = yield (0, strings_1.hashPassword)(req.body.password);
+                if (data.password) {
+                    data.password = yield (0, strings_1.hashPassword)(req.body.password);
+                }
                 const access = yield (0, AccessRepository_1.updateAccess)(username, data);
                 const message = "Operación exitosa Registro Actualizado";
                 (0, response_1.success)({ res, data: access, message });

@@ -107,7 +107,10 @@ class AccesHandler {
     try {
       const username = req.params.username;
       let data = req.body;
-      data.password = await hashPassword(req.body.password);
+      if (data.password) {
+        data.password = await hashPassword(req.body.password);
+      }
+
       const access = await updateAccess(username, data);
       const message = "Operación exitosa Registro Actualizado";
       success({ res, data: access, message });
