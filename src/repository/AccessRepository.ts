@@ -43,17 +43,6 @@ export async function logout(username: string) {
   });
 }
 
-export async function updateTemporalCode(
-  dni: string,
-  temporalCode: string | null
-): Promise<any> {
-  return await prisma.instance.access.updateMany({
-    where: { username: dni },
-    data: {
-      temporalCode,
-    },
-  });
-}
 export async function updateAccess(
   username: string,
   data: Access

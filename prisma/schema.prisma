@@ -2,131 +2,213 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["Users"]
 }
 
 model User {
-  userId       Int       @id @default(autoincrement()) @map(name: "user_id")
-  documentType String    @map(name: "document_type")
-  dni          String    @unique @map(name: "dni")
-  name         String    @map(name: "name")
-  surnames     String    @map(name: "surnames")
-  phone        String?   @map(name: "phone")
-  address      String?   @map(name: "address")
-  email        String?   @map(name: "email")
-  photo        String?   @map(name: "photo")
-  birthDate    DateTime? @map(name: "birth_date")
-  sex          String?   @map(name: "sex")
-  civilStatus  String?   @map(name: "civil_status")
-
-  access Access[]
-  doctor Doctor[]
+  userId               Int                  @id @default(autoincrement()) @map(name: "user_id")
+  documentType         String               @map(name: "document_type")
+  dni                  String               @unique @map(name: "dni")
+  name                 String               @map(name: "name")
+  surnames             String               @map(name: "surnames")
+  phone                String               @map(name: "phone")
+  address              String               @map(name: "address")
+  email                String               @unique @map(name: "email")
+  photo                String?              @map(name: "photo")
+  birthDate            DateTime?            @map(name: "birth_date")
+  sex                  String?              @map(name: "sex")
+  civilStatus          String?              @map(name: "civil_status")
+  appointments         Appointment[]
+  appointmentHistories AppointmentHistory[]
+  doctors              Doctor[]
+  access               Access[]
+  notifications        Notification[]
+  CashRegister         CashRegister[]
+  Payment              Payment[]
 
   @@map(name: "user")
-  @@schema("Users")
 }
 
 model Access {
-  accessId     Int       @id @default(autoincrement()) @map(name: "access_id")
-  userId       Int       @map(name: "user_id")
-  username     String    @unique @map(name: "username")
-  password     String    @map(name: "password")
-  status       String?   @default("offline")
-  active       Boolean?
-  user         User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  lastSession  DateTime? @default(now()) @map("last_session")
-  createAt     DateTime  @default(now()) @map("create_at")
-  temporalCode String?   @map("temporal_code")
-  roleId       Int?      @map(name: "role_id")
-  role         Role?     @relation(fields: [roleId], references: [roleId])
+  accessId    Int       @id @default(autoincrement()) @map(name: "access_id")
+  username    String    @unique @map(name: "username")
+  password    String    @map(name: "password")
+  status      String?   @map(name: "status")
+  active      Boolean?  @map("active")
+  lastSession DateTime? @map(name: "last_session")
+  createAt    DateTime? @map(name: "create_at")
+  userId      Int       @map(name: "user_id")
+  roleId      Int       @map(name: "role_id")
+  user        User      @relation(fields: [userId], references: [userId])
+  role        Role      @relation(fields: [roleId], references: [roleId])
 
   @@map(name: "access")
-  @@schema("Users")
+}
+
+model Appointment {
+  appointmentId        Int                  @id @default(autoincrement()) @map(name: "appointment_id")
+  origin               String               @map(name: "origin")
+  dateTime             DateTime             @map(name: "date_time")
+  status               String               @map(name: "status")
+  notes                String?              @map(name: "notes")
+  doctorId             Int                  @map(name: "doctor_id")
+  userId               Int                  @map(name: "user_id")
+  medicalServiceId     Int                  @map(name: "medical_service_id")
+  appointmentHistories AppointmentHistory[]
+  payments             Payment[]
+  doctor               Doctor               @relation(fields: [doctorId], references: [doctorId])
+  user                 User                 @relation(fields: [userId], references: [userId])
+  medicalService       MedicalService       @relation(fields: [medicalServiceId], references: [medicalServiceId])
+
+  @@map(name: "appointment")
+}
+
+model CashRegisterTransaction {
+  transactionId    Int          @id @default(autoincrement()) @map(name: "transaction_id")
+  transactionDate  DateTime     @map(name: "transaction_date")
+  transactionType  String       @map(name: "transaction_type")
+  amount           Float        @map(name: "amount")
+  description      String?      @map(name: "description")
+  cashRegisterId   Int          @map(name: "cash_register_id")
+  voucherNumber    Int          @map(name: "voucher_number")
+  cashRegister     CashRegister @relation(fields: [cashRegisterId], references: [cashRegisterId])
+  Payment          Payment?     @relation(fields: [paymentPaymentId], references: [paymentId])
+  paymentPaymentId Int?
+
+  @@map(name: "cash_register_transaction")
+}
+
+model CashRegister {
+  cashRegisterId           Int                       @id @default(autoincrement()) @map(name: "cash_register_id")
+  openingBalance           Float                     @map(name: "opening_balance")
+  currentBalance           Float                     @map(name: "current_balance")
+  lastUpdated              DateTime                  @map(name: "last_updated")
+  cashRegisterTransactions CashRegisterTransaction[]
+  User                     User?                     @relation(fields: [admissionistId], references: [userId])
+  admissionistId           Int?                      @map(name: "admissionist_id")
+
+  @@map(name: "cash_register")
+}
+
+model Payment {
+  paymentId               Int                       @id @default(autoincrement()) @map(name: "payment_id")
+  voucherNumber           String                    @unique @map(name: "voucher_number")
+  amount                  Float                     @map(name: "amount")
+  paymentDate             DateTime                  @map(name: "payment_date")
+  appointmentId           Int                       @map(name: "appointment_id")
+  paymentMethodId         Int                       @map(name: "payment_method_id")
+  invoiceTypeId           Int                       @map(name: "invoice_type_id")
+  appointment             Appointment               @relation(fields: [appointmentId], references: [appointmentId])
+  paymentMethod           PaymentMethod             @relation(fields: [paymentMethodId], references: [paymentMethodId])
+  invoiceType             InvoiceType               @relation(fields: [invoiceTypeId], references: [invoiceTypeId])
+  cashRegisterTransaction CashRegisterTransaction[]
+  User                    User?                     @relation(fields: [admissionistId], references: [userId])
+  admissionistId          Int?                      @map(name: "admissionist_id")
+
+  @@map(name: "payment")
+}
+
+model PersonalizedPrice {
+  personalizedPriceId Int            @id @default(autoincrement()) @map(name: "personalized_price_id")
+  personalizedPrice   Float          @map(name: "personalized_price")
+  doctorId            Int            @map(name: "doctor_id")
+  medicalServiceId    Int            @map(name: "medical_service_id")
+  doctor              Doctor         @relation(fields: [doctorId], references: [doctorId])
+  medicalService      MedicalService @relation(fields: [medicalServiceId], references: [medicalServiceId])
+
+  @@map(name: "personalized_price")
+}
+
+model AppointmentHistory {
+  appointmentHistoryId Int         @id @default(autoincrement()) @map(name: "appointment_history_id")
+  diagnosis            String      @map(name: "diagnosis")
+  treatment            String      @map(name: "treatment")
+  userId               Int         @map(name: "user_id")
+  doctorId             Int         @map(name: "doctor_id")
+  appointmentId        Int         @map(name: "appointment_id")
+  user                 User        @relation(fields: [userId], references: [userId])
+  doctor               Doctor      @relation(fields: [doctorId], references: [doctorId])
+  appointment          Appointment @relation(fields: [appointmentId], references: [appointmentId])
+
+  @@map(name: "appointment_history")
+}
+
+model Notification {
+  notificationId Int      @id @default(autoincrement()) @map(name: "notification_id")
+  datetime       DateTime @map(name: "datetime")
+  method         String   @map(name: "method")
+  message        String   @map(name: "message")
+  userId         Int      @map(name: "user_id")
+  user           User     @relation(fields: [userId], references: [userId])
+
+  @@map(name: "notification")
 }
 
 model Role {
-  roleId     Int         @id @default(autoincrement()) @map(name: "role_id")
-  name       String      @unique @map(name: "name")
-  user       Access[]
-  roleXForms RoleXForm[]
+  roleId Int      @id @default(autoincrement()) @map(name: "role_id")
+  name   String   @unique @map(name: "name")
+  user   Access[]
 
   @@map(name: "role")
-  @@schema("Users")
+}
+
+model MedicalService {
+  medicalServiceId   Int                 @id @default(autoincrement()) @map(name: "medical_service_id")
+  name               String              @map(name: "name")
+  code               Int                 @unique @map(name: "code")
+  generalPrice       Float               @map(name: "general_price")
+  prerequisites      String?             @map(name: "prerequisites")
+  appointments       Appointment[]
+  personalizedPrices PersonalizedPrice[]
+
+  @@map(name: "medical_service")
+}
+
+model PaymentMethod {
+  paymentMethodId Int       @id @default(autoincrement()) @map(name: "payment_method_id")
+  name            String    @unique @map(name: "name")
+  payments        Payment[]
+
+  @@map(name: "payment_method")
+}
+
+model InvoiceType {
+  invoiceTypeId Int       @id @default(autoincrement()) @map(name: "invoice_type_id")
+  name          String    @unique @map(name: "name")
+  payments      Payment[]
+
+  @@map(name: "invoice_type")
+}
+
+model Schedule {
+  scheduleId Int     @id @default(autoincrement()) @map(name: "schedule_id")
+  dayOfWeek  String  @map(name: "day_of_week")
+  timeSlot   String  @map(name: "time_slot")
+  capacity   Int     @map(name: "capacity")
+  available  Boolean @map(name: "available")
+  doctorId   Int     @map(name: "doctor_id")
+  doctor     Doctor  @relation(fields: [doctorId], references: [doctorId])
+
+  @@map(name: "schedule")
 }
 
 model Doctor {
-  doctorId  Int         @id @default(autoincrement()) @map(name: "doctor_id")
-  specialty String      @map(name: "specialty")
-  userId    Int         @map(name: "user_id")
-  user      User        @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  status    Boolean     @default(false) @map(name: "status")
-  cmp       String      @map(name: "cmp")
-  rne       String      @map(name: "rne")
-  timetable Timetable[]
-  tariff    Tariff[]
+  doctorId             Int                  @id @default(autoincrement()) @map(name: "doctor_id")
+  specialization       String               @map(name: "specialization")
+  status               Boolean              @map(name: "status")
+  cmp                  String?              @map(name: "cmp")
+  rne                  String?              @map(name: "rne")
+  userId               Int                  @map(name: "user_id")
+  personalizedPrices   PersonalizedPrice[]
+  appointmentHistories AppointmentHistory[]
+  schedules            Schedule[]
+  user                 User                 @relation(fields: [userId], references: [userId])
+  Appointment          Appointment[]
 
   @@map(name: "doctor")
-  @@schema("Users")
 }
-
-model Timetable {
-  timetableId Int    @id @default(autoincrement()) @map(name: "timetable_id")
-  userId      Int    @map(name: "user_id")
-  weekday     String @map(name: "weekday")
-  startTime   String @map(name: "start_time")
-  endTime     String @map(name: "end_time")
-  doctorId    Int    @map(name: "doctor_id")
-  doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
-
-  @@map(name: "timetable")
-  @@schema("Users")
-}
-
-model Tariff {
-  tariffId    Int    @id @default(autoincrement()) @map(name: "tariff_id")
-  doctorId    Int    @map(name: "doctor_id")
-  doctor      Doctor @relation(fields: [doctorId], references: [doctorId], onDelete: Cascade)
-  codeTariff  String @unique @map(name: "code_tariff")
-  clinicPrice Int    @map(name: "clinic_price")
-  doctorPrice Int    @map(name: "doctor_price")
-  discount    Int?   @map(name: "discount")
-  totalTariff Int    @map(name: "total_Tariff")
-
-  @@map(name: "tariff")
-  @@schema("Users")
-}
-
-model Form {
-  formId     Int         @id @default(autoincrement()) @map(name: "form_id")
-  name       String      @unique @map(name: "name")
-  roleXForms RoleXForm[]
-
-  @@map(name: "form")
-  @@schema("Users")
-}
-
-model RoleXForm {
-  roleXFormId Int  @id @default(autoincrement()) @map(name: "role_x_form_id")
-  roleId      Int  @map(name: "role_id")
-  formId      Int  @map(name: "form_id")
-  role        Role @relation(fields: [roleId], references: [roleId])
-  form        Form @relation(fields: [formId], references: [formId])
-
-  @@map(name: "role_x_form")
-  @@schema("Users")
-}
-
-// model Category {
-//   categoryId Int    @id @default(autoincrement()) @map(name: "category_id")
-//   name       String @unique @map(name: "name")
-
-//   @@map(name: "category")
-//   @@schema("Users")
-// }

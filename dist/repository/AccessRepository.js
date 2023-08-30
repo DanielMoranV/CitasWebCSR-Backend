@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAccess = exports.updateTemporalCode = exports.logout = exports.updateLastSession = exports.createAccessUser = exports.getAccess = exports.accessBydni = void 0;
+exports.updateAccess = exports.logout = exports.updateLastSession = exports.createAccessUser = exports.getAccess = exports.accessBydni = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function accessBydni(username) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -66,17 +66,6 @@ function logout(username) {
     });
 }
 exports.logout = logout;
-function updateTemporalCode(dni, temporalCode) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma_1.default.instance.access.updateMany({
-            where: { username: dni },
-            data: {
-                temporalCode,
-            },
-        });
-    });
-}
-exports.updateTemporalCode = updateTemporalCode;
 function updateAccess(username, data) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_1.default.instance.access.updateMany({
