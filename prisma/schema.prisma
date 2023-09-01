@@ -39,7 +39,7 @@ model Access {
   username    String    @unique @map(name: "username")
   password    String    @map(name: "password")
   status      String?   @map(name: "status")
-  active      Boolean?  @map("active")
+  active      Boolean?  @default(true) @map("active")
   lastSession DateTime? @map(name: "last_session")
   createAt    DateTime? @map(name: "create_at")
   userId      Int       @map(name: "user_id")
@@ -160,7 +160,7 @@ model Role {
 model MedicalService {
   medicalServiceId   Int                 @id @default(autoincrement()) @map(name: "medical_service_id")
   name               String              @map(name: "name")
-  code               Int                 @unique @map(name: "code")
+  code               String              @unique @map(name: "code")
   generalPrice       Float               @map(name: "general_price")
   prerequisites      String?             @map(name: "prerequisites")
   appointments       Appointment[]
@@ -201,8 +201,8 @@ model Doctor {
   doctorId             Int                  @id @default(autoincrement()) @map(name: "doctor_id")
   specialization       String               @map(name: "specialization")
   status               Boolean              @map(name: "status")
-  cmp                  String?              @map(name: "cmp")
-  rne                  String?              @map(name: "rne")
+  cmp                  String?              @unique @map(name: "cmp")
+  rne                  String?              @unique @map(name: "rne")
   userId               Int                  @map(name: "user_id")
   personalizedPrices   PersonalizedPrice[]
   appointmentHistories AppointmentHistory[]

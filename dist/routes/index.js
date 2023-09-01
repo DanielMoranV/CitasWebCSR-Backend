@@ -18,6 +18,7 @@ const user_1 = __importDefault(require("./user"));
 const verifyToken_1 = __importDefault(require("../midlewares/verifyToken"));
 const access_1 = __importDefault(require("./access"));
 const collaborator_1 = __importDefault(require("./collaborator"));
+const infoDoctors_1 = __importDefault(require("./infoDoctors"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
@@ -28,6 +29,8 @@ function useRouter(app, api_url) {
         router.use("/access", access_1.default);
         // Collaborators
         router.use("/collaborators", verifyToken_1.default, collaborator_1.default);
+        // InfoDoctors
+        router.use("/infodoctors", infoDoctors_1.default);
         app.use(api_url, router);
     });
 }
