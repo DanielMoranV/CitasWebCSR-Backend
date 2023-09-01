@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInfoDoctors = void 0;
+exports.getInfoDoctor = exports.getInfoDoctors = void 0;
 // export async function getInfoDoctors(): Promise<User[]> {
 //   return await prisma.instance.user.findMany({
 //     orderBy: {
@@ -42,3 +42,15 @@ function getInfoDoctors() {
     });
 }
 exports.getInfoDoctors = getInfoDoctors;
+function getInfoDoctor(cmp) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield yield prisma.$queryRaw `
+    SELECT CONCAT("user".name, ' ', surnames) as medico, cmp, specialization,medical_service.name,personalized_price.personalized_price AS price FROM public.user
+    join  public.doctor USING(user_id)
+    join  public.personalized_price USING(doctor_id)
+    join  public.medical_service USING(medical_service_id)
+    where doctor.cmp = ${cmp}
+  `;
+    });
+}
+exports.getInfoDoctor = getInfoDoctor;

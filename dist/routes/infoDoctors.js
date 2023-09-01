@@ -9,4 +9,5 @@ const infoDoctorsHandler = new InfoDoctorsController_1.default();
 const router = (0, express_1.Router)();
 // Routes users
 router.get("/", infoDoctorsHandler.getInfoDoctors);
+router.get("/:cmp", infoDoctorsHandler.getInfoDoctor);
 exports.default = router;

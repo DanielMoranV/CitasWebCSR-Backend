@@ -9,5 +9,6 @@ const router = Router();
 
 // Routes users
 router.get("/", infoDoctorsHandler.getInfoDoctors);
+router.get("/:cmp", infoDoctorsHandler.getInfoDoctor);
 
 export default router;

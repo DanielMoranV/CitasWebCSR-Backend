@@ -32,5 +32,26 @@ class InfoDoctorsHandler {
             }
         });
     }
+    getInfoDoctor(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const cmp = req.params.cmp;
+                const infoDoctor = yield (0, DoctorsRepository_1.getInfoDoctor)(cmp);
+                console.log(cmp);
+                if (infoDoctor.length != 0) {
+                    const message = "Operación exitosa Información de Médicos";
+                    (0, response_1.success)({ res, data: infoDoctor, message });
+                }
+                else {
+                    const message = "Operación exitosa sin registros";
+                    (0, response_1.success)({ res, data: infoDoctor, message });
+                }
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
 }
 exports.default = InfoDoctorsHandler;
