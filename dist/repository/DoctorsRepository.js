@@ -45,11 +45,11 @@ exports.getInfoDoctors = getInfoDoctors;
 function getInfoDoctor(cmp) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield yield prisma.$queryRaw `
-    SELECT CONCAT("user".name, ' ', surnames) as medico, cmp, specialization,medical_service.name,personalized_price.personalized_price AS price FROM public.user
+    SELECT CONCAT("user".name, ' ', surnames) as medico, cmp, specialization,medical_service.name,personalized_price.personalized_price AS price, doctor_id,medical_service_id FROM public.user
     join  public.doctor USING(user_id)
     join  public.personalized_price USING(doctor_id)
     join  public.medical_service USING(medical_service_id)
-    where doctor.cmp = ${cmp}
+    where doctor.cmp = ${cmp} and medical_service.code = '50.00.00'
   `;
     });
 }

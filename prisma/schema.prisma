@@ -56,6 +56,7 @@ model Appointment {
   dateTime             DateTime             @map(name: "date_time")
   status               String               @map(name: "status")
   notes                String?              @map(name: "notes")
+  createAt             DateTime             @map("create_at")
   doctorId             Int                  @map(name: "doctor_id")
   userId               Int                  @map(name: "user_id")
   medicalServiceId     Int                  @map(name: "medical_service_id")
