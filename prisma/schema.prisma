@@ -59,14 +59,35 @@ model Appointment {
   createAt             DateTime             @map("create_at")
   doctorId             Int                  @map(name: "doctor_id")
   userId               Int                  @map(name: "user_id")
-  medicalServiceId     Int                  @map(name: "medical_service_id")
+  appointmentServices  AppointmentService[]
   appointmentHistories AppointmentHistory[]
   payments             Payment[]
   doctor               Doctor               @relation(fields: [doctorId], references: [doctorId])
   user                 User                 @relation(fields: [userId], references: [userId])
-  medicalService       MedicalService       @relation(fields: [medicalServiceId], references: [medicalServiceId])
 
   @@map(name: "appointment")
+}
+
+model MedicalService {
+  medicalServiceId    Int                  @id @default(autoincrement()) @map(name: "medical_service_id")
+  name                String               @map(name: "name")
+  code                String               @unique @map(name: "code")
+  generalPrice        Float                @map(name: "general_price")
+  prerequisites       String?              @map(name: "prerequisites")
+  appointmentServices AppointmentService[]
+  personalizedPrices  PersonalizedPrice[]
+
+  @@map(name: "medical_service")
+}
+
+model AppointmentService {
+  appointmentId    Int            @map(name: "appointment_id")
+  medicalServiceId Int            @map(name: "medical_service_id")
+  appointment      Appointment    @relation(fields: [appointmentId], references: [appointmentId])
+  medicalService   MedicalService @relation(fields: [medicalServiceId], references: [medicalServiceId])
+
+  @@id([appointmentId, medicalServiceId])
+  @@map(name: "appointment_service")
 }
 
 model CashRegisterTransaction {
@@ -158,18 +179,6 @@ model Role {
   @@map(name: "role")
 }
 
-model MedicalService {
-  medicalServiceId   Int                 @id @default(autoincrement()) @map(name: "medical_service_id")
-  name               String              @map(name: "name")
-  code               String              @unique @map(name: "code")
-  generalPrice       Float               @map(name: "general_price")
-  prerequisites      String?             @map(name: "prerequisites")
-  appointments       Appointment[]
-  personalizedPrices PersonalizedPrice[]
-
-  @@map(name: "medical_service")
-}
-
 model PaymentMethod {
   paymentMethodId Int       @id @default(autoincrement()) @map(name: "payment_method_id")
   name            String    @unique @map(name: "name")
@@ -187,15 +196,30 @@ model InvoiceType {
 }
 
 model Schedule {
-  scheduleId Int     @id @default(autoincrement()) @map(name: "schedule_id")
-  dayOfWeek  String  @map(name: "day_of_week")
-  timeSlot   String  @map(name: "time_slot")
-  capacity   Int     @map(name: "capacity")
-  available  Boolean @map(name: "available")
-  doctorId   Int     @map(name: "doctor_id")
-  doctor     Doctor  @relation(fields: [doctorId], references: [doctorId])
+  scheduleId        Int      @id @default(autoincrement()) @map(name: "schedule_id")
+  day               DateTime @unique @map(name: "day")
+  startTime         String   @map(name: "start_time")
+  endTime           String   @map(name: "end_time")
+  interval          DateTime @map("interval")
+  capacity          Int      @map(name: "capacity")
+  availableSchedule Boolean  @map(name: "available_schedule")
+  doctorId          Int      @map(name: "doctor_id")
+  doctor            Doctor   @relation(fields: [doctorId], references: [doctorId])
+
+  timeSlot TimeSlot[]
 
   @@map(name: "schedule")
+}
+
+model TimeSlot {
+  timeSlotId    Int       @id @default(autoincrement()) @map(name: "time_slot_id")
+  orderlyTurn   DateTime  @map("orderly_turn")
+  nTurn         Int       @map("n_turn")
+  availableTurn Boolean   @map(name: "available_turn")
+  Schedule      Schedule? @relation(fields: [scheduleId], references: [scheduleId])
+  scheduleId    Int
+
+  @@map(name: "timeSlot")
 }
 
 model Doctor {

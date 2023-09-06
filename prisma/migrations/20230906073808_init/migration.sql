@@ -22,7 +22,7 @@ CREATE TABLE "access" (
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "status" TEXT,
-    "active" BOOLEAN,
+    "active" BOOLEAN DEFAULT true,
     "last_session" TIMESTAMP(3),
     "create_at" TIMESTAMP(3),
     "user_id" INTEGER NOT NULL,
@@ -38,11 +38,30 @@ CREATE TABLE "appointment" (
     "date_time" TIMESTAMP(3) NOT NULL,
     "status" TEXT NOT NULL,
     "notes" TEXT,
+    "create_at" TIMESTAMP(3) NOT NULL,
     "doctor_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "medical_service_id" INTEGER NOT NULL,
 
     CONSTRAINT "appointment_pkey" PRIMARY KEY ("appointment_id")
+);
+
+-- CreateTable
+CREATE TABLE "medical_service" (
+    "medical_service_id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "general_price" DOUBLE PRECISION NOT NULL,
+    "prerequisites" TEXT,
+
+    CONSTRAINT "medical_service_pkey" PRIMARY KEY ("medical_service_id")
+);
+
+-- CreateTable
+CREATE TABLE "appointment_service" (
+    "appointment_id" INTEGER NOT NULL,
+    "medical_service_id" INTEGER NOT NULL,
+
+    CONSTRAINT "appointment_service_pkey" PRIMARY KEY ("appointment_id","medical_service_id")
 );
 
 -- CreateTable
@@ -126,17 +145,6 @@ CREATE TABLE "role" (
 );
 
 -- CreateTable
-CREATE TABLE "medical_service" (
-    "medical_service_id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "code" INTEGER NOT NULL,
-    "general_price" DOUBLE PRECISION NOT NULL,
-    "prerequisites" TEXT,
-
-    CONSTRAINT "medical_service_pkey" PRIMARY KEY ("medical_service_id")
-);
-
--- CreateTable
 CREATE TABLE "payment_method" (
     "payment_method_id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -155,13 +163,26 @@ CREATE TABLE "invoice_type" (
 -- CreateTable
 CREATE TABLE "schedule" (
     "schedule_id" SERIAL NOT NULL,
-    "day_of_week" TEXT NOT NULL,
-    "time_slot" TEXT NOT NULL,
+    "day" TIMESTAMP(3) NOT NULL,
+    "start_time" TEXT NOT NULL,
+    "end_time" TEXT NOT NULL,
+    "interval" TIMESTAMP(3) NOT NULL,
     "capacity" INTEGER NOT NULL,
-    "available" BOOLEAN NOT NULL,
+    "available_schedule" BOOLEAN NOT NULL,
     "doctor_id" INTEGER NOT NULL,
 
     CONSTRAINT "schedule_pkey" PRIMARY KEY ("schedule_id")
+);
+
+-- CreateTable
+CREATE TABLE "timeSlot" (
+    "time_slot_id" SERIAL NOT NULL,
+    "orderly_turn" TIMESTAMP(3) NOT NULL,
+    "n_turn" INTEGER NOT NULL,
+    "available_turn" BOOLEAN NOT NULL,
+    "scheduleId" INTEGER NOT NULL,
+
+    CONSTRAINT "timeSlot_pkey" PRIMARY KEY ("time_slot_id")
 );
 
 -- CreateTable
@@ -186,19 +207,28 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 CREATE UNIQUE INDEX "access_username_key" ON "access"("username");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "medical_service_code_key" ON "medical_service"("code");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "payment_voucher_number_key" ON "payment"("voucher_number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "role_name_key" ON "role"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "medical_service_code_key" ON "medical_service"("code");
-
--- CreateIndex
 CREATE UNIQUE INDEX "payment_method_name_key" ON "payment_method"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "invoice_type_name_key" ON "invoice_type"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "schedule_day_key" ON "schedule"("day");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "doctor_cmp_key" ON "doctor"("cmp");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "doctor_rne_key" ON "doctor"("rne");
 
 -- AddForeignKey
 ALTER TABLE "access" ADD CONSTRAINT "access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -213,7 +243,10 @@ ALTER TABLE "appointment" ADD CONSTRAINT "appointment_doctor_id_fkey" FOREIGN KE
 ALTER TABLE "appointment" ADD CONSTRAINT "appointment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "appointment" ADD CONSTRAINT "appointment_medical_service_id_fkey" FOREIGN KEY ("medical_service_id") REFERENCES "medical_service"("medical_service_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "appointment_service" ADD CONSTRAINT "appointment_service_appointment_id_fkey" FOREIGN KEY ("appointment_id") REFERENCES "appointment"("appointment_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointment_service" ADD CONSTRAINT "appointment_service_medical_service_id_fkey" FOREIGN KEY ("medical_service_id") REFERENCES "medical_service"("medical_service_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "cash_register_transaction" ADD CONSTRAINT "cash_register_transaction_cash_register_id_fkey" FOREIGN KEY ("cash_register_id") REFERENCES "cash_register"("cash_register_id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -256,6 +289,9 @@ ALTER TABLE "notification" ADD CONSTRAINT "notification_user_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "schedule" ADD CONSTRAINT "schedule_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctor"("doctor_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "timeSlot" ADD CONSTRAINT "timeSlot_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "schedule"("schedule_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "doctor" ADD CONSTRAINT "doctor_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
