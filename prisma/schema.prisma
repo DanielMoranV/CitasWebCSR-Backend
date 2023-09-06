@@ -30,8 +30,27 @@ model User {
   notifications        Notification[]
   CashRegister         CashRegister[]
   Payment              Payment[]
+  dependents           Dependent[]
 
   @@map(name: "user")
+}
+
+model Dependent {
+  dependentId  Int       @id @default(autoincrement()) @map(name: "dependent_id")
+  documentType String    @map(name: "document_type")
+  dni          String    @unique @map(name: "dni")
+  name         String    @map(name: "name")
+  surnames     String    @map(name: "surnames")
+  phone        String?   @map(name: "phone")
+  address      String?   @map(name: "address")
+  photo        String?   @map(name: "photo")
+  birthDate    DateTime? @map(name: "birth_date")
+  sex          String?   @map(name: "sex")
+  civilStatus  String?   @map(name: "civil_status")
+  userId       Int       @map(name: "user_id")
+  user         User      @relation(fields: [userId], references: [userId])
+
+  @@map(name: "dependent")
 }
 
 model Access {
