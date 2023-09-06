@@ -16,9 +16,9 @@ model User {
   dni                  String               @unique @map(name: "dni")
   name                 String               @map(name: "name")
   surnames             String               @map(name: "surnames")
-  phone                String               @map(name: "phone")
-  address              String               @map(name: "address")
-  email                String               @unique @map(name: "email")
+  phone                String?              @map(name: "phone")
+  address              String?              @map(name: "address")
+  email                String?              @map(name: "email")
   photo                String?              @map(name: "photo")
   birthDate            DateTime?            @map(name: "birth_date")
   sex                  String?              @map(name: "sex")
@@ -91,7 +91,7 @@ model MedicalService {
   medicalServiceId    Int                  @id @default(autoincrement()) @map(name: "medical_service_id")
   name                String               @map(name: "name")
   code                String               @unique @map(name: "code")
-  generalPrice        Float                @map(name: "general_price")
+  generalPrice        Float?               @map(name: "general_price")
   prerequisites       String?              @map(name: "prerequisites")
   appointmentServices AppointmentService[]
   personalizedPrices  PersonalizedPrice[]
