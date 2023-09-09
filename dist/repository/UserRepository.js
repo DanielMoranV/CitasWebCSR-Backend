@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.createUser = exports.userBydni = exports.getUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createDependent = exports.createUser = exports.userBydniDependent = exports.userBydni = exports.getUsers = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -38,6 +38,17 @@ function userBydni(dni) {
     });
 }
 exports.userBydni = userBydni;
+function userBydniDependent(dni) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.user.findFirst({
+            where: { dni },
+            include: {
+                dependents: true,
+            },
+        });
+    });
+}
+exports.userBydniDependent = userBydniDependent;
 function createUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
         const newUser = yield prisma_1.default.instance.user.create({ data });
@@ -45,6 +56,13 @@ function createUser(data) {
     });
 }
 exports.createUser = createUser;
+function createDependent(data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const newDependent = yield prisma_1.default.instance.dependent.create({ data });
+        return newDependent;
+    });
+}
+exports.createDependent = createDependent;
 function updateUser(dni, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield prisma_1.default.instance.user.update({

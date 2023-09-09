@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Dependent } from "@prisma/client";
 import prisma from "../connection/prisma";
 
 export async function getUsers(): Promise<User[]> {
@@ -20,10 +20,21 @@ export async function userBydni(dni: string): Promise<User | null> {
     },
   });
 }
-
+export async function userBydniDependent(dni: string): Promise<User | null> {
+  return await prisma.instance.user.findFirst({
+    where: { dni },
+    include: {
+      dependents: true,
+    },
+  });
+}
 export async function createUser(data: User): Promise<User> {
   const newUser = await prisma.instance.user.create({ data });
   return newUser;
+}
+export async function createDependent(data: Dependent): Promise<Dependent> {
+  const newDependent = await prisma.instance.dependent.create({ data });
+  return newDependent;
 }
 
 export async function updateUser(dni: string, data: User): Promise<any> {

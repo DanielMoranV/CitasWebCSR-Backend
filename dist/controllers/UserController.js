@@ -52,8 +52,44 @@ class UserHandler {
             }
         });
     }
+    // Crear nuevo dependiente
+    createDependent(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
+            try {
+                const newUser = yield (0, UserRepository_1.createDependent)(data);
+                const message = "Operación exitosa Registro Creado";
+                (0, response_1.success)({ res, data: newUser, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    // Buscar dependientes por Documento de identidad del usuario
+    getUserDependent(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dni = req.params.userdni;
+                const user = yield (0, UserRepository_1.userBydniDependent)(dni);
+                if (user) {
+                    const message = "Operación exitosa Registro Encontrado";
+                    (0, response_1.success)({ res, data: user, message });
+                }
+                else {
+                    const message = "Operación exitosa No se encontraron resultados";
+                    (0, response_1.success)({ res, data: null, message });
+                }
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     // Crear nuevo paciente con accesos
-    createPatients(req, res) {
+    createPatient(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const dataPatients = req.body;
             const username = req.body.dni;

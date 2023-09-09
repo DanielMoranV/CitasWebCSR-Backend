@@ -7,6 +7,8 @@ import {
   getUsers,
   updateUser,
   deleteUser,
+  createDependent,
+  userBydniDependent,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
 import { accessBydni, createAccessUser } from "../repository/AccessRepository";
@@ -44,8 +46,38 @@ class UserHandler {
       failure({ res, message });
     }
   }
+
+  // Crear nuevo dependiente
+  public async createDependent(req: Request, res: Response): Promise<void> {
+    const data = req.body;
+    try {
+      const newUser = await createDependent(data);
+      const message = "Operación exitosa Registro Creado";
+      success({ res, data: newUser, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  // Buscar dependientes por Documento de identidad del usuario
+  public async getUserDependent(req: Request, res: Response): Promise<void> {
+    try {
+      const dni = req.params.userdni;
+      const user = await userBydniDependent(dni);
+      if (user) {
+        const message = "Operación exitosa Registro Encontrado";
+        success({ res, data: user, message });
+      } else {
+        const message = "Operación exitosa No se encontraron resultados";
+        success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
   // Crear nuevo paciente con accesos
-  public async createPatients(req: Request, res: Response): Promise<void> {
+  public async createPatient(req: Request, res: Response): Promise<void> {
     const dataPatients = req.body;
     const username = req.body.dni;
 
