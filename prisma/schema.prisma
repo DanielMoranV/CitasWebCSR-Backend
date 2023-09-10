@@ -28,7 +28,6 @@ model User {
   doctors              Doctor[]
   access               Access[]
   notifications        Notification[]
-  CashRegister         CashRegister[]
   Payment              Payment[]
   dependents           Dependent[]
 
@@ -110,16 +109,16 @@ model AppointmentService {
 }
 
 model CashRegisterTransaction {
-  transactionId    Int          @id @default(autoincrement()) @map(name: "transaction_id")
-  transactionDate  DateTime     @map(name: "transaction_date")
-  transactionType  String       @map(name: "transaction_type")
-  amount           Float        @map(name: "amount")
-  description      String?      @map(name: "description")
-  cashRegisterId   Int          @map(name: "cash_register_id")
-  voucherNumber    Int          @map(name: "voucher_number")
-  cashRegister     CashRegister @relation(fields: [cashRegisterId], references: [cashRegisterId])
-  Payment          Payment?     @relation(fields: [paymentPaymentId], references: [paymentId])
-  paymentPaymentId Int?
+  transactionId   Int          @id @default(autoincrement()) @map(name: "transaction_id")
+  transactionDate DateTime     @map(name: "transaction_date")
+  transactionType String       @map(name: "transaction_type")
+  amount          Float        @map(name: "amount")
+  description     String?      @map(name: "description")
+  cashRegisterId  Int          @map(name: "cash_register_id")
+  voucherNumber   Int          @map(name: "voucher_number")
+  cashRegister    CashRegister @relation(fields: [cashRegisterId], references: [cashRegisterId])
+  Payment         Payment?     @relation(fields: [paymentId], references: [paymentId])
+  paymentId       Int?
 
   @@map(name: "cash_register_transaction")
 }
@@ -130,7 +129,7 @@ model CashRegister {
   currentBalance           Float                     @map(name: "current_balance")
   lastUpdated              DateTime                  @map(name: "last_updated")
   cashRegisterTransactions CashRegisterTransaction[]
-  User                     User?                     @relation(fields: [admissionistId], references: [userId])
+  Admissionist             Admissionist?             @relation(fields: [admissionistId], references: [admissionistId])
   admissionistId           Int?                      @map(name: "admissionist_id")
 
   @@map(name: "cash_register")
@@ -148,8 +147,10 @@ model Payment {
   paymentMethod           PaymentMethod             @relation(fields: [paymentMethodId], references: [paymentMethodId])
   invoiceType             InvoiceType               @relation(fields: [invoiceTypeId], references: [invoiceTypeId])
   cashRegisterTransaction CashRegisterTransaction[]
-  User                    User?                     @relation(fields: [admissionistId], references: [userId])
+  Admissionist            Admissionist?             @relation(fields: [admissionistId], references: [admissionistId])
   admissionistId          Int?                      @map(name: "admissionist_id")
+  User                    User?                     @relation(fields: [userId], references: [userId])
+  userId                  Int?
 
   @@map(name: "payment")
 }
@@ -255,4 +256,11 @@ model Doctor {
   Appointment          Appointment[]
 
   @@map(name: "doctor")
+}
+
+model Admissionist {
+  admissionistId Int @id @default(autoincrement()) @map(name: "admissionist_id")
+
+  Payment      Payment[]
+  CashRegister CashRegister[]
 }
