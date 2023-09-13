@@ -28,6 +28,16 @@ export async function userBydniDependent(dni: string): Promise<User | null> {
     },
   });
 }
+export async function updateUserDependent(
+  dependentId: number,
+  data: User
+): Promise<any> {
+  const dependent = await prisma.instance.dependent.update({
+    where: { dependentId },
+    data,
+  });
+  return dependent;
+}
 export async function createUser(data: User): Promise<User> {
   const newUser = await prisma.instance.user.create({ data });
   return newUser;

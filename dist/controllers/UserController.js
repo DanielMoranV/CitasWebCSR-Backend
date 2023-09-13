@@ -89,6 +89,22 @@ class UserHandler {
             }
         });
     }
+    // Actualizar datos de empleado (dni)
+    updateUserDependent(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dependentId = Number(req.params.dependentId);
+                const data = req.body;
+                const userDependent = yield (0, UserRepository_1.updateUserDependent)(dependentId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: userDependent, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     // Crear nuevo paciente con accesos
     createPatient(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

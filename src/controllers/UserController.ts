@@ -9,6 +9,7 @@ import {
   deleteUser,
   createDependent,
   userBydniDependent,
+  updateUserDependent,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
 import { accessBydni, createAccessUser } from "../repository/AccessRepository";
@@ -72,6 +73,19 @@ class UserHandler {
         const message = "Operación exitosa No se encontraron resultados";
         success({ res, data: null, message });
       }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  // Actualizar datos de empleado (dni)
+  public async updateUserDependent(req: Request, res: Response): Promise<void> {
+    try {
+      const dependentId = Number(req.params.dependentId);
+      const data = req.body;
+      const userDependent = await updateUserDependent(dependentId, data);
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: userDependent, message });
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
