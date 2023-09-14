@@ -30,7 +30,7 @@ export async function userBydniDependent(dni: string): Promise<User | null> {
 }
 export async function updateUserDependent(
   dependentId: number,
-  data: User
+  data: Dependent
 ): Promise<any> {
   const dependent = await prisma.instance.dependent.update({
     where: { dependentId },
