@@ -21,4 +21,5 @@ router.post("/patients", userHandler.createPatient);
 router.post("/dependents", userHandler.createDependent);
 router.get("/:userdni/dependents", userHandler.getUserDependent);
 router.put("/dependents/:dependentId", userHandler.updateUserDependent);
+router.delete("/dependents/:dependentId", userHandler.deleteUserDependent);
 exports.default = router;

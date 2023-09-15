@@ -38,6 +38,16 @@ export async function updateUserDependent(
   });
   return dependent;
 }
+export async function deleteUserDependent(
+  dependentId: number
+): Promise<Dependent> {
+  const deletedUser = await prisma.instance.dependent.delete({
+    where: {
+      dependentId,
+    },
+  });
+  return deletedUser;
+}
 export async function createUser(data: User): Promise<User> {
   const newUser = await prisma.instance.user.create({ data });
   return newUser;
