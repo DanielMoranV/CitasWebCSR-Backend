@@ -1,22 +1,18 @@
-import { User } from "@prisma/client";
+import { User, Access } from "@prisma/client";
 import prisma from "../connection/prisma";
 
-export async function getCollaborators(): Promise<User[]> {
-  return await prisma.instance.user.findMany({
+export async function getCollaborators(): Promise<Access[]> {
+  return await prisma.instance.access.findMany({
     where: {
-      access: {
-        some: {
-          roleId: {
-            in: [1, 2, 3],
-          },
-        },
+      roleId: {
+        in: [1, 2, 3],
       },
     },
     orderBy: {
       userId: "asc",
     },
     include: {
-      access: true,
+      user: true,
     },
   });
 }

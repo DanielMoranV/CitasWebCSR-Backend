@@ -16,21 +16,17 @@ exports.deleteCollaborator = exports.updateCollaborator = exports.createCollabor
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function getCollaborators() {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma_1.default.instance.user.findMany({
+        return yield prisma_1.default.instance.access.findMany({
             where: {
-                access: {
-                    some: {
-                        roleId: {
-                            in: [1, 2, 3],
-                        },
-                    },
+                roleId: {
+                    in: [1, 2, 3],
                 },
             },
             orderBy: {
                 userId: "asc",
             },
             include: {
-                access: true,
+                user: true,
             },
         });
     });
