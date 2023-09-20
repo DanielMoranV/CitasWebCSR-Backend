@@ -40,10 +40,12 @@ class UserHandler {
   public async createUser(req: Request, res: Response): Promise<void> {
     const data = req.body;
     try {
+      console.log("data", req.body);
       const newUser = await createUser(data);
       const message = "Operación exitosa Registro Creado";
       success({ res, data: newUser, message });
     } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

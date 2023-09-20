@@ -72,7 +72,33 @@ function deleteUserDependent(dependentId) {
 exports.deleteUserDependent = deleteUserDependent;
 function createUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const newUser = yield prisma_1.default.instance.user.create({ data });
+        console.log("ayu", data.access[0].username);
+        const newUser = yield prisma_1.default.instance.user.create({
+            data: {
+                address: data.address,
+                birthDate: data.birthDate,
+                civilStatus: data.civilStatus,
+                dni: data.dni,
+                documentType: data.documentType,
+                email: data.email,
+                name: data.name,
+                phone: data.phone,
+                photo: data.photo,
+                sex: data.sex,
+                surnames: data.surnames,
+                access: {
+                    create: {
+                        username: data.access.username,
+                        password: data.access.password,
+                        roleId: data.access.roleId,
+                        createAt: data.access.createAt,
+                    },
+                },
+            },
+            include: {
+                access: true,
+            },
+        });
         return newUser;
     });
 }

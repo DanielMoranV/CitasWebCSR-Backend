@@ -42,11 +42,13 @@ class UserHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
+                console.log("data", req.body);
                 const newUser = yield (0, UserRepository_1.createUser)(data);
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newUser, message });
             }
             catch (error) {
+                console.log(error);
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }
