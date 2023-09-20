@@ -49,7 +49,6 @@ export async function deleteUserDependent(
   return deletedUser;
 }
 export async function createUser(data: any): Promise<User> {
-  console.log("ayu", data.access[0].username);
   const newUser = await prisma.instance.user.create({
     data: {
       address: data.address,
@@ -68,7 +67,8 @@ export async function createUser(data: any): Promise<User> {
           username: data.access.username,
           password: data.access.password,
           roleId: data.access.roleId,
-          createAt: data.access.createAt,
+          createAt: new Date(),
+          status: "offline",
         },
       },
     },

@@ -40,7 +40,7 @@ class UserHandler {
   public async createUser(req: Request, res: Response): Promise<void> {
     const data = req.body;
     try {
-      console.log("data", req.body);
+      data.access.password = await hashPassword(data.access.password);
       const newUser = await createUser(data);
       const message = "Operación exitosa Registro Creado";
       success({ res, data: newUser, message });

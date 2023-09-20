@@ -72,7 +72,6 @@ function deleteUserDependent(dependentId) {
 exports.deleteUserDependent = deleteUserDependent;
 function createUser(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("ayu", data.access[0].username);
         const newUser = yield prisma_1.default.instance.user.create({
             data: {
                 address: data.address,
@@ -91,7 +90,8 @@ function createUser(data) {
                         username: data.access.username,
                         password: data.access.password,
                         roleId: data.access.roleId,
-                        createAt: data.access.createAt,
+                        createAt: new Date(),
+                        status: "offline",
                     },
                 },
             },

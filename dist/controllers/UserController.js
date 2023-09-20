@@ -42,7 +42,7 @@ class UserHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
-                console.log("data", req.body);
+                data.access.password = yield (0, strings_1.hashPassword)(data.access.password);
                 const newUser = yield (0, UserRepository_1.createUser)(data);
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newUser, message });
