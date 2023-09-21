@@ -162,6 +162,7 @@ class UserHandler {
       const message = "Operación exitosa Registro Actualizado";
       success({ res, data: user, message });
     } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

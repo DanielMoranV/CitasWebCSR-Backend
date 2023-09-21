@@ -7,6 +7,7 @@ export async function getCollaborators(): Promise<Access[]> {
       roleId: {
         in: [1, 2, 3],
       },
+      active: true,
     },
     orderBy: {
       userId: "asc",

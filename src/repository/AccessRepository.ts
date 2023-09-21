@@ -52,3 +52,12 @@ export async function updateAccess(
     data,
   });
 }
+export async function updateAccessId(
+  accessId: number,
+  data: Access
+): Promise<any> {
+  return await prisma.instance.access.update({
+    where: { accessId },
+    data,
+  });
+}

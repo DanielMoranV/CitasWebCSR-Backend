@@ -14,5 +14,6 @@ router.post("/", accesHandler.loginUser);
 router.get("/", verifyToken_1.default, accesHandler.getAccess);
 router.get("/:username", verifyToken_1.default, accesHandler.getAccessUser);
 router.put("/:username", verifyToken_1.default, accesHandler.updateAccess);
+router.put("/accessId/:accessId", verifyToken_1.default, accesHandler.updateAccessId);
 //router.delete("/:dni", accesHandler.deleteUser);
 exports.default = router;

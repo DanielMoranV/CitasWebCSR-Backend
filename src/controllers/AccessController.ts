@@ -7,6 +7,7 @@ import {
   updateLastSession,
   getAccess,
   updateAccess,
+  updateAccessId,
 } from "../repository/AccessRepository";
 import { userBydni } from "../repository/UserRepository";
 import { hashPassword, comparePassword } from "../utils/strings";
@@ -112,6 +113,22 @@ class AccesHandler {
       }
 
       const access = await updateAccess(username, data);
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: access, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async updateAccessId(req: Request, res: Response) {
+    try {
+      const accessId = Number(req.params.accessId);
+      let data = req.body;
+      if (data.password) {
+        data.password = await hashPassword(req.body.password);
+      }
+
+      const access = await updateAccessId(accessId, data);
       const message = "Operación exitosa Registro Actualizado";
       success({ res, data: access, message });
     } catch (error: any) {

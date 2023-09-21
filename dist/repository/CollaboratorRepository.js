@@ -21,6 +21,7 @@ function getCollaborators() {
                 roleId: {
                     in: [1, 2, 3],
                 },
+                active: true,
             },
             orderBy: {
                 userId: "asc",
