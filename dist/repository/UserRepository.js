@@ -94,9 +94,18 @@ function createUser(data) {
                         status: "offline",
                     },
                 },
+                Doctor: {
+                    create: {
+                        specialization: data.Doctor.specialization,
+                        status: data.Doctor.status,
+                        cmp: data.Doctor.cmp,
+                        rne: data.Doctor.rne,
+                    },
+                },
             },
             include: {
                 access: true,
+                Doctor: true,
             },
         });
         return newUser;
