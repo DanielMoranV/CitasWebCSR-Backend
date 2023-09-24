@@ -11,25 +11,26 @@ datasource db {
 }
 
 model User {
-  userId               Int                  @id @default(autoincrement()) @map(name: "user_id")
-  documentType         String               @map(name: "document_type")
-  dni                  String               @unique @map(name: "dni")
-  name                 String               @map(name: "name")
-  surnames             String               @map(name: "surnames")
-  phone                String?              @map(name: "phone")
-  address              String?              @map(name: "address")
-  email                String?              @map(name: "email")
-  photo                String?              @map(name: "photo")
-  birthDate            DateTime?            @map(name: "birth_date")
-  sex                  String?              @map(name: "sex")
-  civilStatus          String?              @map(name: "civil_status")
+  userId       Int       @id @default(autoincrement()) @map(name: "user_id")
+  documentType String    @map(name: "document_type")
+  dni          String    @unique @map(name: "dni")
+  name         String    @map(name: "name")
+  surnames     String    @map(name: "surnames")
+  phone        String?   @map(name: "phone")
+  address      String?   @map(name: "address")
+  email        String?   @map(name: "email")
+  photo        String?   @map(name: "photo")
+  birthDate    DateTime? @map(name: "birth_date")
+  sex          String?   @map(name: "sex")
+  civilStatus  String?   @map(name: "civil_status")
+
   appointments         Appointment[]
   appointmentHistories AppointmentHistory[]
-  doctors              Doctor[]
   access               Access[]
   notifications        Notification[]
   Payment              Payment[]
   dependents           Dependent[]
+  Doctor               Doctor?
 
   @@map(name: "user")
 }
@@ -241,16 +242,17 @@ model TimeSlot {
 }
 
 model Doctor {
-  doctorId             Int                  @id @default(autoincrement()) @map(name: "doctor_id")
-  specialization       String               @map(name: "specialization")
-  status               Boolean              @map(name: "status")
-  cmp                  String?              @unique @map(name: "cmp")
-  rne                  String?              @unique @map(name: "rne")
-  userId               Int                  @map(name: "user_id")
+  doctorId       Int     @id @default(autoincrement()) @map(name: "doctor_id")
+  specialization String  @map(name: "specialization")
+  status         Boolean @map(name: "status")
+  cmp            String? @unique @map(name: "cmp")
+  rne            String? @unique @map(name: "rne")
+  user           User    @relation(fields: [userId], references: [userId])
+  userId         Int     @unique @map(name: "user_id")
+
   personalizedPrices   PersonalizedPrice[]
   appointmentHistories AppointmentHistory[]
   schedules            Schedule[]
-  user                 User                 @relation(fields: [userId], references: [userId])
   Appointment          Appointment[]
 
   @@map(name: "doctor")
@@ -261,4 +263,6 @@ model Admissionist {
 
   Payment      Payment[]
   CashRegister CashRegister[]
+
+  @@map(name: "admissionist")
 }

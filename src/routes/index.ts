@@ -5,6 +5,7 @@ import verifyToken from "../midlewares/verifyToken";
 import access from "./access";
 import collaborators from "./collaborator";
 import infoDoctors from "./infoDoctors";
+import doctors from "./doctor";
 
 export async function useRouter(app: Express, api_url: string) {
   //version 1
@@ -19,6 +20,9 @@ export async function useRouter(app: Express, api_url: string) {
   router.use("/collaborators", verifyToken, collaborators);
   // InfoDoctors
   router.use("/infodoctors", infoDoctors);
+
+  //Doctors
+  router.use("/doctors", verifyToken, doctors);
 
   app.use(api_url, router);
 }

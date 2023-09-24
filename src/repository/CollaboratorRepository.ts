@@ -5,7 +5,7 @@ export async function getCollaborators(): Promise<Access[]> {
   return await prisma.instance.access.findMany({
     where: {
       roleId: {
-        in: [1, 2, 3],
+        in: [1, 2],
       },
       active: true,
     },

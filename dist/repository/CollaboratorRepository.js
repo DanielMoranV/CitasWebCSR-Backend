@@ -19,7 +19,7 @@ function getCollaborators() {
         return yield prisma_1.default.instance.access.findMany({
             where: {
                 roleId: {
-                    in: [1, 2, 3],
+                    in: [1, 2],
                 },
                 active: true,
             },
