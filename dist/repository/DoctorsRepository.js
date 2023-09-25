@@ -27,7 +27,7 @@ function getDoctors() {
             include: {
                 user: {
                     include: {
-                        Doctor: true,
+                        Doctor: { include: { personalizedPrices: true } },
                     },
                 },
             },

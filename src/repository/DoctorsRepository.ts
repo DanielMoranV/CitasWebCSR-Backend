@@ -13,7 +13,7 @@ export async function getDoctors(): Promise<Access[]> {
     include: {
       user: {
         include: {
-          Doctor: true,
+          Doctor: { include: { personalizedPrices: true } },
         },
       },
     },
