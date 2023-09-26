@@ -32,5 +32,35 @@ class DoctorsHandler {
             }
         });
     }
+    updateDoctor(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const doctorId = Number(req.params.doctorId);
+                const data = req.body;
+                const doctor = yield (0, DoctorsRepository_1.updateDoctor)(doctorId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: doctor, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    updatePersonalizedPrice(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const personalizedPriceId = Number(req.params.personalizedPriceId);
+                const data = req.body;
+                const personalizedPrice = yield (0, DoctorsRepository_1.updatePersonalizedPrice)(personalizedPriceId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: personalizedPrice, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
 }
 exports.default = DoctorsHandler;

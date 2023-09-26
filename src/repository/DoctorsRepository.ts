@@ -1,4 +1,4 @@
-import { User, Doctor, Access } from "@prisma/client";
+import { User, Doctor, Access, PersonalizedPrice } from "@prisma/client";
 import prisma from "../connection/prisma";
 
 export async function getDoctors(): Promise<Access[]> {
@@ -19,7 +19,26 @@ export async function getDoctors(): Promise<Access[]> {
     },
   });
 }
-
+export async function updateDoctor(
+  doctorId: number,
+  data: Doctor
+): Promise<any> {
+  const doctor = await prisma.instance.doctor.update({
+    where: { doctorId },
+    data,
+  });
+  return doctor;
+}
+export async function updatePersonalizedPrice(
+  personalizedPriceId: number,
+  data: PersonalizedPrice
+): Promise<any> {
+  const personalizedPrice = await prisma.instance.personalizedPrice.update({
+    where: { personalizedPriceId },
+    data,
+  });
+  return personalizedPrice;
+}
 import { PrismaClient } from "@prisma/client";
 const newprisma = new PrismaClient();
 

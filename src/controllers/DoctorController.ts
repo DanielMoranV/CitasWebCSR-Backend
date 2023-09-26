@@ -1,6 +1,10 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
-import { getDoctors } from "../repository/DoctorsRepository";
+import {
+  getDoctors,
+  updateDoctor,
+  updatePersonalizedPrice,
+} from "../repository/DoctorsRepository";
 import { success, failure } from "../utils/response";
 
 class DoctorsHandler {
@@ -14,6 +18,36 @@ class DoctorsHandler {
         const message = "Operación exitosa sin registros";
         success({ res, data: doctors, message });
       }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async updateDoctor(req: Request, res: Response): Promise<void> {
+    try {
+      const doctorId = Number(req.params.doctorId);
+      const data = req.body;
+      const doctor = await updateDoctor(doctorId, data);
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: doctor, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async updatePersonalizedPrice(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const personalizedPriceId = Number(req.params.personalizedPriceId);
+      const data = req.body;
+      const personalizedPrice = await updatePersonalizedPrice(
+        personalizedPriceId,
+        data
+      );
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: personalizedPrice, message });
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });

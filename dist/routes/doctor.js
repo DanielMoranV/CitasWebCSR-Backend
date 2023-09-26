@@ -9,4 +9,7 @@ const doctorsHandler = new DoctorController_1.default();
 const router = (0, express_1.Router)();
 // Routes users
 router.get("/", doctorsHandler.getDoctors);
+router.put("/:doctorId", doctorsHandler.updateDoctor);
+// PersonalizedPrice
+router.put("/personalizedPrice/:personalizedPriceId", doctorsHandler.updatePersonalizedPrice);
 exports.default = router;
