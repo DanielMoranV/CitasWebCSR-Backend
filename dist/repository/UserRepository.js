@@ -100,12 +100,24 @@ function createUser(data) {
                         status: data.Doctor.status,
                         cmp: data.Doctor.cmp,
                         rne: data.Doctor.rne,
+                        personalizedPrices: {
+                            create: [
+                                {
+                                    personalizedPrice: data.Doctor.personalizedPrices[0].personalizedPrice,
+                                    medicalServiceId: data.Doctor.personalizedPrices[0].medicalServiceId,
+                                },
+                            ],
+                        },
                     },
                 },
             },
             include: {
                 access: true,
-                Doctor: true,
+                Doctor: {
+                    include: {
+                        personalizedPrices: true,
+                    },
+                },
             },
         });
         return newUser;
