@@ -1,9 +1,11 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import {
+  getDoctorSchedule,
   getDoctors,
   updateDoctor,
   updatePersonalizedPrice,
+  createDoctorSchedule,
 } from "../repository/DoctorsRepository";
 import { success, failure } from "../utils/response";
 
@@ -49,6 +51,42 @@ class DoctorsHandler {
       const message = "Operación exitosa Registro Actualizado";
       success({ res, data: personalizedPrice, message });
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async getDoctorSchedule(req: Request, res: Response): Promise<void> {
+    try {
+      const doctorId = Number(req.params.doctorId);
+      const doctor = await getDoctorSchedule(doctorId);
+      if (doctor) {
+        const message = "Operación exitosa Registro Encontrado";
+        success({ res, data: doctor, message });
+      } else {
+        const message = "Operación exitosa No se encontraron resultados";
+        success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async createDoctorSchedule(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const data = req.body;
+      const doctor = await createDoctorSchedule(data);
+      if (doctor) {
+        const message = "Operación exitosa Registro Encontrado";
+        success({ res, data: doctor, message });
+      } else {
+        const message = "Operación exitosa No se encontraron resultados";
+        success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

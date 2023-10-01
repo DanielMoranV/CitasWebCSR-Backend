@@ -216,10 +216,10 @@ model InvoiceType {
 
 model Schedule {
   scheduleId        Int      @id @default(autoincrement()) @map(name: "schedule_id")
-  day               DateTime @unique @map(name: "day")
-  startTime         String   @map(name: "start_time")
-  endTime           String   @map(name: "end_time")
-  interval          DateTime @map("interval")
+  day               DateTime @map(name: "day")
+  startTime         DateTime @unique @map(name: "start_time")
+  endTime           DateTime @unique @map(name: "end_time")
+  interval          Int      @map("interval")
   capacity          Int      @map(name: "capacity")
   availableSchedule Boolean  @map(name: "available_schedule")
   doctorId          Int      @map(name: "doctor_id")
@@ -232,10 +232,10 @@ model Schedule {
 
 model TimeSlot {
   timeSlotId    Int       @id @default(autoincrement()) @map(name: "time_slot_id")
-  orderlyTurn   DateTime  @map("orderly_turn")
+  orderlyTurn   DateTime  @unique @map("orderly_turn")
   nTurn         Int       @map("n_turn")
   availableTurn Boolean   @map(name: "available_turn")
-  Schedule      Schedule? @relation(fields: [scheduleId], references: [scheduleId])
+  Schedule      Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)
   scheduleId    Int
 
   @@map(name: "timeSlot")

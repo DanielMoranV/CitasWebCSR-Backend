@@ -1,4 +1,10 @@
-import { User, Doctor, Access, PersonalizedPrice } from "@prisma/client";
+import {
+  User,
+  Doctor,
+  Access,
+  PersonalizedPrice,
+  Schedule,
+} from "@prisma/client";
 import prisma from "../connection/prisma";
 
 export async function getDoctors(): Promise<Access[]> {
@@ -68,4 +74,51 @@ export async function getInfoDoctor(cmp: string): Promise<any> {
     join  public.medical_service USING(medical_service_id)
     where doctor.cmp = ${cmp} and medical_service.code = '50.00.00' AND access.active = true
   `;
+}
+
+export async function getDoctorSchedule(
+  doctorId: number
+): Promise<Schedule[] | null> {
+  return await prisma.instance.schedule.findMany({
+    where: { doctorId },
+    include: {
+      timeSlot: true,
+    },
+  });
+}
+export async function createDoctorSchedule(data: any): Promise<any> {
+  const { doctorId, ...rest } = data;
+
+  // Crear un array de TimeSlots basado en la capacidad
+  const timeSlots = [];
+  let currentTime = new Date(rest.startTime);
+  const end = new Date(rest.endTime);
+
+  while (currentTime <= end && timeSlots.length < rest.capacity) {
+    timeSlots.push({
+      orderlyTurn: currentTime,
+      nTurn: timeSlots.length + 1,
+      availableTurn: true,
+    });
+
+    // Añadir el intervalo al tiempo actual
+    currentTime = new Date(currentTime.getTime() + rest.interval * 60000);
+  }
+
+  return await prisma.instance.schedule.create({
+    data: {
+      ...rest,
+      doctor: {
+        connect: {
+          doctorId: doctorId,
+        },
+      },
+      timeSlot: {
+        create: timeSlots,
+      },
+    },
+    include: {
+      timeSlot: true, // Incluir los TimeSlots en la respuesta
+    },
+  });
 }

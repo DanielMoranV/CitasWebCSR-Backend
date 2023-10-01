@@ -110,26 +110,20 @@ class UserHandler {
   public async createPatient(req: Request, res: Response): Promise<void> {
     const dataPatients = req.body;
     const username = req.body.dni;
+    const password = await hashPassword(username);
 
     try {
+      console.log(dataPatients);
+      dataPatients.access = {
+        username,
+        password,
+        roleId: 4,
+      };
       const newUser = await createUser(dataPatients);
-      const user = await userBydni(username);
-      const password = await hashPassword(username);
-      if (user) {
-        let accesPatients = {
-          username,
-          userId: user.userId,
-          password,
-          createAt: new Date(),
-          roleId: 4,
-        };
-        console.log(accesPatients);
-        await createAccessUser(accesPatients);
-      }
-
       const message = "Operación exitosa Registro Creado";
       success({ res, data: newUser, message });
     } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

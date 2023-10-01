@@ -62,5 +62,46 @@ class DoctorsHandler {
             }
         });
     }
+    getDoctorSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const doctorId = Number(req.params.doctorId);
+                const doctor = yield (0, DoctorsRepository_1.getDoctorSchedule)(doctorId);
+                if (doctor) {
+                    const message = "Operación exitosa Registro Encontrado";
+                    (0, response_1.success)({ res, data: doctor, message });
+                }
+                else {
+                    const message = "Operación exitosa No se encontraron resultados";
+                    (0, response_1.success)({ res, data: null, message });
+                }
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    createDoctorSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = req.body;
+                const doctor = yield (0, DoctorsRepository_1.createDoctorSchedule)(data);
+                if (doctor) {
+                    const message = "Operación exitosa Registro Encontrado";
+                    (0, response_1.success)({ res, data: doctor, message });
+                }
+                else {
+                    const message = "Operación exitosa No se encontraron resultados";
+                    (0, response_1.success)({ res, data: null, message });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
 }
 exports.default = DoctorsHandler;

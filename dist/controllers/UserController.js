@@ -127,25 +127,20 @@ class UserHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const dataPatients = req.body;
             const username = req.body.dni;
+            const password = yield (0, strings_1.hashPassword)(username);
             try {
+                console.log(dataPatients);
+                dataPatients.access = {
+                    username,
+                    password,
+                    roleId: 4,
+                };
                 const newUser = yield (0, UserRepository_1.createUser)(dataPatients);
-                const user = yield (0, UserRepository_1.userBydni)(username);
-                const password = yield (0, strings_1.hashPassword)(username);
-                if (user) {
-                    let accesPatients = {
-                        username,
-                        userId: user.userId,
-                        password,
-                        createAt: new Date(),
-                        roleId: 4,
-                    };
-                    console.log(accesPatients);
-                    yield (0, AccessRepository_1.createAccessUser)(accesPatients);
-                }
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newUser, message });
             }
             catch (error) {
+                console.log(error);
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }

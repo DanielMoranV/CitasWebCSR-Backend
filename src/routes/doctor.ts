@@ -10,6 +10,10 @@ const router = Router();
 router.get("/", doctorsHandler.getDoctors);
 router.put("/:doctorId", doctorsHandler.updateDoctor);
 
+//schedule
+router.get("/:doctorId/schedule", doctorsHandler.getDoctorSchedule);
+router.post("/schedule", doctorsHandler.createDoctorSchedule);
+
 // PersonalizedPrice
 router.put(
   "/personalizedPrice/:personalizedPriceId",

@@ -49,57 +49,88 @@ export async function deleteUserDependent(
   return deletedUser;
 }
 export async function createUser(data: any): Promise<User> {
-  const newUser = await prisma.instance.user.create({
-    data: {
-      address: data.address,
-      birthDate: data.birthDate,
-      civilStatus: data.civilStatus,
-      dni: data.dni,
-      documentType: data.documentType,
-      email: data.email,
-      name: data.name,
-      phone: data.phone,
-      photo: data.photo,
-      sex: data.sex,
-      surnames: data.surnames,
-      access: {
-        create: {
-          username: data.access.username,
-          password: data.access.password,
-          roleId: data.access.roleId,
-          createAt: new Date(),
-          status: "offline",
+  if (data.Doctor) {
+    const newUser = await prisma.instance.user.create({
+      data: {
+        address: data.address,
+        birthDate: data.birthDate,
+        civilStatus: data.civilStatus,
+        dni: data.dni,
+        documentType: data.documentType,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        photo: data.photo,
+        sex: data.sex,
+        surnames: data.surnames,
+        access: {
+          create: {
+            username: data.access.username,
+            password: data.access.password,
+            roleId: data.access.roleId,
+            createAt: new Date(),
+            status: "offline",
+          },
         },
-      },
-      Doctor: {
-        create: {
-          specialization: data.Doctor.specialization,
-          status: data.Doctor.status,
-          cmp: data.Doctor.cmp,
-          rne: data.Doctor.rne,
-          personalizedPrices: {
-            create: [
-              {
-                personalizedPrice:
-                  data.Doctor.personalizedPrices[0].personalizedPrice,
-                medicalServiceId:
-                  data.Doctor.personalizedPrices[0].medicalServiceId,
-              },
-            ],
+        Doctor: {
+          create: {
+            specialization: data.Doctor.specialization,
+            status: data.Doctor.status,
+            cmp: data.Doctor.cmp,
+            rne: data.Doctor.rne,
+            personalizedPrices: {
+              create: [
+                {
+                  personalizedPrice:
+                    data.Doctor.personalizedPrices[0].personalizedPrice,
+                  medicalServiceId:
+                    data.Doctor.personalizedPrices[0].medicalServiceId,
+                },
+              ],
+            },
           },
         },
       },
-    },
-    include: {
-      access: true,
-      Doctor: {
-        include: {
-          personalizedPrices: true,
+      include: {
+        access: true,
+        Doctor: {
+          include: {
+            personalizedPrices: true,
+          },
         },
       },
-    },
-  });
-  return newUser;
+    });
+    return newUser;
+  } else {
+    const newUser = await prisma.instance.user.create({
+      data: {
+        address: data.address,
+        birthDate: data.birthDate,
+        civilStatus: data.civilStatus,
+        dni: data.dni,
+        documentType: data.documentType,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        photo: data.photo,
+        sex: data.sex,
+        surnames: data.surnames,
+        access: {
+          create: {
+            username: data.access.username,
+            password: data.access.password,
+            roleId: data.access.roleId,
+            createAt: new Date(),
+            status: "offline",
+          },
+        },
+      },
+      include: {
+        access: true,
+      },
+    });
+    return newUser;
+  }
 }
 export async function createDependent(data: Dependent): Promise<Dependent> {
   const newDependent = await prisma.instance.dependent.create({ data });

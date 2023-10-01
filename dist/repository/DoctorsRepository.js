@@ -8,11 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
+exports.createDoctorSchedule = exports.getDoctorSchedule = exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function getDoctors() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -90,3 +101,45 @@ function getInfoDoctor(cmp) {
     });
 }
 exports.getInfoDoctor = getInfoDoctor;
+function getDoctorSchedule(doctorId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.schedule.findMany({
+            where: { doctorId },
+            include: {
+                timeSlot: true,
+            },
+        });
+    });
+}
+exports.getDoctorSchedule = getDoctorSchedule;
+function createDoctorSchedule(data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { doctorId } = data, rest = __rest(data, ["doctorId"]);
+        // Crear un array de TimeSlots basado en la capacidad
+        const timeSlots = [];
+        let currentTime = new Date(rest.startTime);
+        const end = new Date(rest.endTime);
+        while (currentTime <= end && timeSlots.length < rest.capacity) {
+            timeSlots.push({
+                orderlyTurn: currentTime,
+                nTurn: timeSlots.length + 1,
+                availableTurn: true,
+            });
+            // Añadir el intervalo al tiempo actual
+            currentTime = new Date(currentTime.getTime() + rest.interval * 60000);
+        }
+        return yield prisma_1.default.instance.schedule.create({
+            data: Object.assign(Object.assign({}, rest), { doctor: {
+                    connect: {
+                        doctorId: doctorId,
+                    },
+                }, timeSlot: {
+                    create: timeSlots,
+                } }),
+            include: {
+                timeSlot: true, // Incluir los TimeSlots en la respuesta
+            },
+        });
+    });
+}
+exports.createDoctorSchedule = createDoctorSchedule;
