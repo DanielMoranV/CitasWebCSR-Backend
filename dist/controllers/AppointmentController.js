@@ -12,11 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const errormessagebycode_1 = require("../midlewares/errormessagebycode");
 const response_1 = require("../utils/response");
 const AppointmentRepository_1 = require("../repository/AppointmentRepository");
+const DoctorsRepository_1 = require("../repository/DoctorsRepository");
 class AppointmentHandler {
     createAppointment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
+                const { timeSlotId } = req.body;
+                yield (0, DoctorsRepository_1.updateTimeSlot)(Number(timeSlotId), { availableTurn: false });
                 const newAppointment = yield (0, AppointmentRepository_1.createAppointment)(data);
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newAppointment, message });

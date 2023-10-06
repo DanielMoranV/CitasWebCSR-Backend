@@ -16,7 +16,12 @@ exports.createAppointment = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createAppointment(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const newAppointment = yield prisma_1.default.instance.appointment.create({ data });
+        const newAppointment = yield prisma_1.default.instance.appointment.create({
+            data: data,
+            include: {
+                appointmentServices: true,
+            },
+        });
         return newAppointment;
     });
 }

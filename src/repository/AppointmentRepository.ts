@@ -4,6 +4,11 @@ import prisma from "../connection/prisma";
 export async function createAppointment(
   data: Appointment
 ): Promise<Appointment> {
-  const newAppointment = await prisma.instance.appointment.create({ data });
+  const newAppointment = await prisma.instance.appointment.create({
+    data: data,
+    include: {
+      appointmentServices: true,
+    },
+  });
   return newAppointment;
 }

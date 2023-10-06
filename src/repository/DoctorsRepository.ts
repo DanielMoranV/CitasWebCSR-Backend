@@ -1,11 +1,13 @@
 import {
-  User,
+  TimeSlot,
   Doctor,
   Access,
   PersonalizedPrice,
   Schedule,
 } from "@prisma/client";
 import prisma from "../connection/prisma";
+import { PrismaClient } from "@prisma/client";
+const newprisma = new PrismaClient();
 
 export async function getDoctors(): Promise<Access[]> {
   return await prisma.instance.access.findMany({
@@ -45,8 +47,6 @@ export async function updatePersonalizedPrice(
   });
   return personalizedPrice;
 }
-import { PrismaClient } from "@prisma/client";
-const newprisma = new PrismaClient();
 
 export async function getInfoDoctors(): Promise<any> {
   return await newprisma.$queryRaw`
@@ -80,9 +80,11 @@ export async function getDoctorSchedule(
   doctorId: number
 ): Promise<Schedule[] | null> {
   return await prisma.instance.schedule.findMany({
-    where: { doctorId },
+    where: { doctorId, availableSchedule: true },
     include: {
-      timeSlot: true,
+      timeSlot: {
+        where: { availableTurn: true },
+      },
     },
   });
 }
@@ -120,5 +122,15 @@ export async function createDoctorSchedule(data: any): Promise<any> {
     include: {
       timeSlot: true, // Incluir los TimeSlots en la respuesta
     },
+  });
+}
+
+export async function updateTimeSlot(
+  timeSlotId: number,
+  data: any
+): Promise<TimeSlot> {
+  return await prisma.instance.timeSlot.update({
+    where: { timeSlotId },
+    data,
   });
 }
