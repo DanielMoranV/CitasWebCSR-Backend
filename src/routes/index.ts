@@ -6,6 +6,7 @@ import access from "./access";
 import collaborators from "./collaborator";
 import infoDoctors from "./infoDoctors";
 import doctors from "./doctor";
+import appointment from "./appointment";
 
 export async function useRouter(app: Express, api_url: string) {
   //version 1
@@ -23,6 +24,9 @@ export async function useRouter(app: Express, api_url: string) {
 
   //Doctors
   router.use("/doctors", verifyToken, doctors);
+
+  // Appointment
+  router.use("/appointment", verifyToken, appointment);
 
   app.use(api_url, router);
 }

@@ -68,19 +68,22 @@ model Access {
 }
 
 model Appointment {
-  appointmentId        Int                  @id @default(autoincrement()) @map(name: "appointment_id")
-  origin               String               @map(name: "origin")
-  dateTime             DateTime             @map(name: "date_time")
-  status               String               @map(name: "status")
-  notes                String?              @map(name: "notes")
-  createAt             DateTime             @map("create_at")
-  doctorId             Int                  @map(name: "doctor_id")
-  userId               Int                  @map(name: "user_id")
+  appointmentId Int      @id @default(autoincrement()) @map(name: "appointment_id")
+  origin        String   @map(name: "origin")
+  dateTime      DateTime @map(name: "date_time")
+  status        String   @map(name: "status")
+  notes         String?  @map(name: "notes")
+  createAt      DateTime @map("create_at")
+  doctorId      Int      @map(name: "doctor_id")
+  userId        Int      @map(name: "user_id")
+  timeSlotId    Int      @unique @map(name: "time_slot_id")
+
   appointmentServices  AppointmentService[]
   appointmentHistories AppointmentHistory[]
   payments             Payment[]
   doctor               Doctor               @relation(fields: [doctorId], references: [doctorId])
   user                 User                 @relation(fields: [userId], references: [userId])
+  timeSlot             TimeSlot             @relation(fields: [timeSlotId], references: [timeSlotId])
 
   @@map(name: "appointment")
 }
@@ -231,12 +234,13 @@ model Schedule {
 }
 
 model TimeSlot {
-  timeSlotId    Int       @id @default(autoincrement()) @map(name: "time_slot_id")
-  orderlyTurn   DateTime  @unique @map("orderly_turn")
-  nTurn         Int       @map("n_turn")
-  availableTurn Boolean   @map(name: "available_turn")
-  Schedule      Schedule? @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)
+  timeSlotId    Int           @id @default(autoincrement()) @map(name: "time_slot_id")
+  orderlyTurn   DateTime      @unique @map("orderly_turn")
+  nTurn         Int           @map("n_turn")
+  availableTurn Boolean       @map(name: "available_turn")
+  Schedule      Schedule?     @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)
   scheduleId    Int
+  Appointment   Appointment[]
 
   @@map(name: "timeSlot")
 }
