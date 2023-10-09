@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAppointment = void 0;
+exports.getAppointmentId = exports.createAppointment = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createAppointment(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,3 +26,31 @@ function createAppointment(data) {
     });
 }
 exports.createAppointment = createAppointment;
+function getAppointmentId(appointmentId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.appointment.findUniqueOrThrow({
+            where: { appointmentId },
+            include: {
+                user: true,
+                dependent: {
+                    include: {
+                        user: true,
+                    },
+                },
+                doctor: {
+                    include: {
+                        user: true,
+                        personalizedPrices: true,
+                    },
+                },
+                timeSlot: true,
+                appointmentServices: {
+                    include: {
+                        medicalService: true,
+                    },
+                },
+            },
+        });
+    });
+}
+exports.getAppointmentId = getAppointmentId;

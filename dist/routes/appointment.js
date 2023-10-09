@@ -8,4 +8,5 @@ const AppointmentController_1 = __importDefault(require("../controllers/Appointm
 const appointmentHandler = new AppointmentController_1.default();
 const router = (0, express_1.Router)();
 router.post("/", appointmentHandler.createAppointment);
+router.get("/:appointmentId", appointmentHandler.getAppointmentId);
 exports.default = router;

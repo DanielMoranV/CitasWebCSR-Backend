@@ -31,5 +31,25 @@ class AppointmentHandler {
             }
         });
     }
+    getAppointmentId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const appointmentId = Number(req.params.appointmentId);
+                const appointment = yield (0, AppointmentRepository_1.getAppointmentId)(appointmentId);
+                if (appointment.length != 0) {
+                    const message = "Operación exitosa Lista de empleados";
+                    (0, response_1.success)({ res, data: appointment, message });
+                }
+                else {
+                    const message = "Operación exitosa sin registros";
+                    (0, response_1.success)({ res, data: appointment, message });
+                }
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
 }
 exports.default = AppointmentHandler;

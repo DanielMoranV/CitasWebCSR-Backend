@@ -12,3 +12,30 @@ export async function createAppointment(
   });
   return newAppointment;
 }
+export async function getAppointmentId(
+  appointmentId: number
+): Promise<Appointment> {
+  return await prisma.instance.appointment.findUniqueOrThrow({
+    where: { appointmentId },
+    include: {
+      user: true,
+      dependent: {
+        include: {
+          user: true,
+        },
+      },
+      doctor: {
+        include: {
+          user: true,
+          personalizedPrices: true,
+        },
+      },
+      timeSlot: true,
+      appointmentServices: {
+        include: {
+          medicalService: true,
+        },
+      },
+    },
+  });
+}
