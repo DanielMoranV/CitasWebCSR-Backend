@@ -141,15 +141,15 @@ model CashRegister {
 
 model Payment {
   paymentId               Int                       @id @default(autoincrement()) @map(name: "payment_id")
-  voucherNumber           String                    @unique @map(name: "voucher_number")
+  voucherNumber           String?                   @map(name: "voucher_number")
   amount                  Float                     @map(name: "amount")
   paymentDate             DateTime                  @map(name: "payment_date")
   appointmentId           Int                       @map(name: "appointment_id")
   paymentMethodId         Int                       @map(name: "payment_method_id")
-  invoiceTypeId           Int                       @map(name: "invoice_type_id")
+  VoucherTypeId           Int                       @map(name: "voucher_type_id")
   appointment             Appointment               @relation(fields: [appointmentId], references: [appointmentId])
   paymentMethod           PaymentMethod             @relation(fields: [paymentMethodId], references: [paymentMethodId])
-  invoiceType             InvoiceType               @relation(fields: [invoiceTypeId], references: [invoiceTypeId])
+  VoucherType             VoucherType               @relation(fields: [VoucherTypeId], references: [VoucherTypeId])
   cashRegisterTransaction CashRegisterTransaction[]
   Admissionist            Admissionist?             @relation(fields: [admissionistId], references: [admissionistId])
   admissionistId          Int?                      @map(name: "admissionist_id")
@@ -211,12 +211,12 @@ model PaymentMethod {
   @@map(name: "payment_method")
 }
 
-model InvoiceType {
-  invoiceTypeId Int       @id @default(autoincrement()) @map(name: "invoice_type_id")
+model VoucherType {
+  VoucherTypeId Int       @id @default(autoincrement()) @map(name: "voucher_type_id")
   name          String    @unique @map(name: "name")
   payments      Payment[]
 
-  @@map(name: "invoice_type")
+  @@map(name: "voucher_type")
 }
 
 model Schedule {
