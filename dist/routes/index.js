@@ -21,6 +21,7 @@ const collaborator_1 = __importDefault(require("./collaborator"));
 const infoDoctors_1 = __importDefault(require("./infoDoctors"));
 const doctor_1 = __importDefault(require("./doctor"));
 const appointment_1 = __importDefault(require("./appointment"));
+const payment_1 = __importDefault(require("./payment"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
@@ -37,6 +38,8 @@ function useRouter(app, api_url) {
         router.use("/doctors", verifyToken_1.default, doctor_1.default);
         // Appointment
         router.use("/appointment", verifyToken_1.default, appointment_1.default);
+        //Payment
+        router.use("/payment", verifyToken_1.default, payment_1.default);
         app.use(api_url, router);
     });
 }
