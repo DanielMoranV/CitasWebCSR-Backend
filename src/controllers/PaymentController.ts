@@ -3,43 +3,46 @@ import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import { success, failure } from "../utils/response";
 import { createPayment, getPaymentId } from "../repository/PaymentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
-import { MercadoPagoConfig, Payment } from "mercadopago";
+import Culqi from "culqi-node";
 
+const accessToken: string = <string>process.env.ACCESS_TOKEN_CULQUI;
+const culqi = new Culqi({
+  privateKey: accessToken,
+});
 class PaymentHandler {
   public async createPayment(req: Request, res: Response): Promise<void> {
     const data = req.body;
-
-    const accessToken =
-      "TEST-1434385854084408-101107-f1bd79780b72fd9b683f774bf8ef0dec-204234147";
-    const client = new MercadoPagoConfig({
-      accessToken,
-      options: {
-        timeout: 5000,
-        idempotencyKey: "abc",
-      },
-    });
-
-    const payment = new Payment(client);
-    console.log(data);
     try {
-      const body = {
-        transaction_amount: data.transaction_amount,
-        token: data.token,
-        installments: data.installments,
-        issuer_id: data.issuer_id,
-        payment_method_id: data.payment_method_id,
-        payer: data.payer,
-      };
-
-      // Step 5: Make the request
-      payment.create({ body }).then(console.log).catch(console.log);
-      //const newPayment = await createPayment(data);
-      const message = "Operación exitosa Registro Creado";
-      //success({ res, data: newPayment, message });
+      const charge = await culqi.charges.createCharge({
+        amount: data.metadata.amount,
+        currency_code: "PEN",
+        email: data.email,
+        source_id: data.id,
+        antifraud_details: {
+          address: data.client.address,
+          address_city: data.client.address,
+          country_code: "PE",
+          first_name: data.client.name,
+          last_name: data.client.surnames,
+          phone: data.client.phone,
+        },
+      });
+      if (charge.id) {
+        data.metadata.chargeId = charge.id;
+        const newPayment = await createPayment(data.metadata);
+        const message = "Operación exitosa Registro Creado";
+        success({ res, data: newPayment, message });
+      }
     } catch (error: any) {
       console.log(error);
-      const message = getErrorMessageByCode(error.code);
-      failure({ res, message });
+      if (error.code) {
+        const message = getErrorMessageByCode(error.code);
+        failure({ res, message });
+      } else {
+        const message = error.user_message;
+        console.log(message);
+        failure({ res, message });
+      }
     }
   }
   public async getPaymentId(req: Request, res: Response): Promise<void> {

@@ -16,7 +16,33 @@ exports.createPayment = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createPayment(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma_1.default.instance.payment.create({ data });
+        return yield prisma_1.default.instance.payment.create({
+            data: {
+                amount: data.amount,
+                paymentDate: data.paymentDate,
+                chargeId: data.chargeId,
+                User: {
+                    connect: {
+                        userId: data.userId,
+                    },
+                },
+                appointment: {
+                    connect: {
+                        appointmentId: data.appointmentId,
+                    },
+                },
+                paymentMethod: {
+                    connect: {
+                        paymentMethodId: data.paymentMethodId,
+                    },
+                },
+                VoucherType: {
+                    connect: {
+                        VoucherTypeId: data.VoucherTypeId,
+                    },
+                },
+            },
+        });
     });
 }
 exports.createPayment = createPayment;
