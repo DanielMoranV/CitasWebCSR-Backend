@@ -9,4 +9,5 @@ const appointmentHandler = new AppointmentController_1.default();
 const router = (0, express_1.Router)();
 router.post("/", appointmentHandler.createAppointment);
 router.get("/:appointmentId", appointmentHandler.getAppointmentId);
+router.get("/user/:userId", appointmentHandler.getAppointmentUserId);
 exports.default = router;

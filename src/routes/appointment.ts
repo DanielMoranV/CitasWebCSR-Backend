@@ -7,5 +7,6 @@ const router = Router();
 
 router.post("/", appointmentHandler.createAppointment);
 router.get("/:appointmentId", appointmentHandler.getAppointmentId);
+router.get("/user/:userId", appointmentHandler.getAppointmentUserId);
 
 export default router;

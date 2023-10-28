@@ -3,6 +3,40 @@ import morgan from "morgan";
 import cors from "cors";
 import prisma from "./connection/prisma";
 
+const { Client } = require("whatsapp-web.js");
+const qrImage = require("qr-image");
+const fs = require("fs");
+const path = require("path");
+
+const client = new Client();
+
+const dir = path.join(process.cwd(), "tmp");
+
+// Verificar si el directorio existe, si no, crearlo
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+
+client.on("qr", (qr: any) => {
+  console.log(qr);
+  let qrSvg = qrImage.imageSync(qr, { type: "svg", margin: 4 });
+  fs.writeFileSync(path.join(dir, "qr.svg"), qrSvg, "utf-8");
+  console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
+  console.log("⚡ Actualiza F5 el navegador para mantener el mejor QR ⚡");
+});
+
+client.on("ready", () => {
+  console.log("¡El cliente está listo!");
+});
+
+client.on("message", (msg: { body: string; reply: (arg0: string) => void }) => {
+  if (msg.body === "!ping") {
+    msg.reply("pong");
+  }
+});
+export { client };
+client.initialize();
+
 //Routes
 import { useRouter } from "./routes";
 

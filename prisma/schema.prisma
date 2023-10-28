@@ -223,8 +223,8 @@ model VoucherType {
 model Schedule {
   scheduleId        Int      @id @default(autoincrement()) @map(name: "schedule_id")
   day               DateTime @map(name: "day")
-  startTime         DateTime @unique @map(name: "start_time")
-  endTime           DateTime @unique @map(name: "end_time")
+  startTime         DateTime @map(name: "start_time")
+  endTime           DateTime @map(name: "end_time")
   interval          Int      @map("interval")
   capacity          Int      @map(name: "capacity")
   availableSchedule Boolean  @map(name: "available_schedule")
@@ -238,7 +238,7 @@ model Schedule {
 
 model TimeSlot {
   timeSlotId    Int           @id @default(autoincrement()) @map(name: "time_slot_id")
-  orderlyTurn   DateTime      @unique @map("orderly_turn")
+  orderlyTurn   DateTime      @map("orderly_turn")
   nTurn         Int           @map("n_turn")
   availableTurn Boolean       @map(name: "available_turn")
   Schedule      Schedule?     @relation(fields: [scheduleId], references: [scheduleId], onDelete: Cascade)

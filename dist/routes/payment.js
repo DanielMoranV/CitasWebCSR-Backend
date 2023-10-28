@@ -8,5 +8,5 @@ const PaymentController_1 = __importDefault(require("../controllers/PaymentContr
 const paymentHandler = new PaymentController_1.default();
 const router = (0, express_1.Router)();
 router.post("/", paymentHandler.createPayment);
-router.get("/:paymentId", paymentHandler.getPaymentId);
+//router.get("/:paymentId", paymentHandler.getPaymentId);
 exports.default = router;
