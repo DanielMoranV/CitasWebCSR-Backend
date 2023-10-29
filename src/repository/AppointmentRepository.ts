@@ -69,3 +69,31 @@ export async function getAppointmentsUserId(
     },
   });
 }
+
+export async function getAppointment(): Promise<Appointment[]> {
+  return await prisma.instance.appointment.findMany({
+    include: {
+      user: true,
+      dependent: {
+        include: {
+          user: true,
+        },
+      },
+      doctor: {
+        include: {
+          user: true,
+          personalizedPrices: true,
+        },
+      },
+      timeSlot: true,
+      appointmentServices: {
+        include: {
+          medicalService: true,
+        },
+      },
+    },
+    orderBy: {
+      createAt: "desc",
+    },
+  });
+}

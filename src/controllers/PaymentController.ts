@@ -43,7 +43,7 @@ class PaymentHandler {
           `Médico: *${data.dataPayment.nameDoctor}*\n` +
           `Especialidad: *${data.dataPayment.specialty}*\n` +
           `Horario: *${data.dataPayment.date}*\n` +
-          `Costo: *${data.dataPayment.price}*\n` +
+          `Costo: *S/.${data.dataPayment.price}*\n` +
           `Call Center: *985 586 350*\n` +
           `Dirección de la clínica: *Av. Panamericana N° 332 - Urb. Santa Rosa, Sullana*\n\n` +
           `Gracias por confiar en nosotros. ¡Te esperamos!`;

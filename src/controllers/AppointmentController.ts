@@ -3,6 +3,7 @@ import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import { success, failure } from "../utils/response";
 import {
   createAppointment,
+  getAppointment,
   getAppointmentId,
   getAppointmentsUserId,
 } from "../repository/AppointmentRepository";
@@ -40,6 +41,16 @@ class AppointmentHandler {
     try {
       const userId = Number(req.params.userId);
       const user = await getAppointmentsUserId(userId);
+      const message = "Operación exitosa Lista de empleados";
+      success({ res, data: user, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async getAppointment(req: Request, res: Response): Promise<void> {
+    try {
+      const user = await getAppointment();
       const message = "Operación exitosa Lista de empleados";
       success({ res, data: user, message });
     } catch (error: any) {
