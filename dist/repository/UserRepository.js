@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.createDependent = exports.createUser = exports.deleteUserDependent = exports.updateUserDependent = exports.userBydniDependent = exports.userBydni = exports.getUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createDependent = exports.createUser = exports.deleteUserDependent = exports.updateUserDependent = exports.getPatients = exports.userBydniDependent = exports.userBydni = exports.getUsers = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -49,6 +49,14 @@ function userBydniDependent(dni) {
     });
 }
 exports.userBydniDependent = userBydniDependent;
+function getPatients() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.user.findMany({
+            where: {},
+        });
+    });
+}
+exports.getPatients = getPatients;
 function updateUserDependent(dependentId, data) {
     return __awaiter(this, void 0, void 0, function* () {
         const dependent = yield prisma_1.default.instance.dependent.update({

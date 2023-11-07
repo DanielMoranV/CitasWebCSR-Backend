@@ -87,29 +87,44 @@ function getAppointmentsUserId(userId) {
 exports.getAppointmentsUserId = getAppointmentsUserId;
 function getAppointment() {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma_1.default.instance.appointment.findMany({
-            include: {
-                user: true,
-                dependent: {
-                    include: {
-                        user: true,
-                    },
-                },
-                doctor: {
-                    include: {
-                        user: true,
-                        personalizedPrices: true,
-                    },
-                },
-                timeSlot: true,
-                appointmentServices: {
-                    include: {
-                        medicalService: true,
-                    },
+        const beforeYesterday = new Date();
+        beforeYesterday.setDate(beforeYesterday.getDate() - 2);
+        return yield prisma_1.default.instance.timeSlot.findMany({
+            where: {
+                orderlyTurn: {
+                    gte: new Date(beforeYesterday.toDateString()), // Filtrar registros a partir de anteayer
                 },
             },
-            orderBy: {
-                createAt: "desc",
+            include: {
+                Appointment: {
+                    include: {
+                        user: true,
+                        dependent: {
+                            include: {
+                                user: true,
+                            },
+                        },
+                        timeSlot: true,
+                        appointmentServices: {
+                            include: {
+                                medicalService: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        createAt: "desc",
+                    },
+                },
+                Schedule: {
+                    include: {
+                        doctor: {
+                            include: {
+                                user: true,
+                                personalizedPrices: true,
+                            },
+                        },
+                    },
+                },
             },
         });
     });

@@ -28,6 +28,11 @@ export async function userBydniDependent(dni: string): Promise<User | null> {
     },
   });
 }
+export async function getPatients(): Promise<User | null> {
+  return await prisma.instance.user.findMany({
+    where: {},
+  });
+}
 export async function updateUserDependent(
   dependentId: number,
   data: Dependent

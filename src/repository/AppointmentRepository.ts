@@ -1,4 +1,4 @@
-import { Appointment } from "@prisma/client";
+import { Appointment, TimeSlot } from "@prisma/client";
 import prisma from "../connection/prisma";
 
 export async function createAppointment(
@@ -70,30 +70,45 @@ export async function getAppointmentsUserId(
   });
 }
 
-export async function getAppointment(): Promise<Appointment[]> {
-  return await prisma.instance.appointment.findMany({
-    include: {
-      user: true,
-      dependent: {
-        include: {
-          user: true,
-        },
-      },
-      doctor: {
-        include: {
-          user: true,
-          personalizedPrices: true,
-        },
-      },
-      timeSlot: true,
-      appointmentServices: {
-        include: {
-          medicalService: true,
-        },
+export async function getAppointment(): Promise<TimeSlot[]> {
+  const beforeYesterday = new Date();
+  beforeYesterday.setDate(beforeYesterday.getDate() - 2);
+  return await prisma.instance.timeSlot.findMany({
+    where: {
+      orderlyTurn: {
+        gte: new Date(beforeYesterday.toDateString()), // Filtrar registros a partir de anteayer
       },
     },
-    orderBy: {
-      createAt: "desc",
+    include: {
+      Appointment: {
+        include: {
+          user: true,
+          dependent: {
+            include: {
+              user: true,
+            },
+          },
+          timeSlot: true,
+          appointmentServices: {
+            include: {
+              medicalService: true,
+            },
+          },
+        },
+        orderBy: {
+          createAt: "desc",
+        },
+      },
+      Schedule: {
+        include: {
+          doctor: {
+            include: {
+              user: true,
+              personalizedPrices: true,
+            },
+          },
+        },
+      },
     },
   });
 }
