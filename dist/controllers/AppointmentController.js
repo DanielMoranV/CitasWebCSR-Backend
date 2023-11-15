@@ -45,6 +45,24 @@ class AppointmentHandler {
             }
         });
     }
+    deleteAppointmentId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const appointmentId = Number(req.params.appointmentId);
+                const { timeSlotId } = yield (0, AppointmentRepository_1.getAppointmentId)(appointmentId);
+                yield (0, DoctorsRepository_1.updateTimeSlot)(Number(timeSlotId), { availableTurn: true });
+                const appointment = yield (0, AppointmentRepository_1.deleteAppointment)(appointmentId);
+                const message = "Operación exitosa Registro Eliminado";
+                // trabajar cuando no encuentra dni
+                (0, response_1.success)({ res, data: appointment, message });
+            }
+            catch (error) {
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     getAppointmentUserId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

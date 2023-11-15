@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.createAppointment = void 0;
+exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.updateAppointment = exports.deleteAppointment = exports.createAppointment = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createAppointment(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,6 +26,27 @@ function createAppointment(data) {
     });
 }
 exports.createAppointment = createAppointment;
+function deleteAppointment(appointmentId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const deleteAppointment = yield prisma_1.default.instance.appointment.delete({
+            where: {
+                appointmentId,
+            },
+        });
+        return deleteAppointment;
+    });
+}
+exports.deleteAppointment = deleteAppointment;
+function updateAppointment(appointmentId, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const dependent = yield prisma_1.default.instance.appointment.update({
+            where: { appointmentId },
+            data,
+        });
+        return dependent;
+    });
+}
+exports.updateAppointment = updateAppointment;
 function getAppointmentId(appointmentId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_1.default.instance.appointment.findUniqueOrThrow({

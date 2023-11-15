@@ -12,6 +12,26 @@ export async function createAppointment(
   });
   return newAppointment;
 }
+export async function deleteAppointment(
+  appointmentId: number
+): Promise<Appointment> {
+  const deleteAppointment = await prisma.instance.appointment.delete({
+    where: {
+      appointmentId,
+    },
+  });
+  return deleteAppointment;
+}
+export async function updateAppointment(
+  appointmentId: number,
+  data: Appointment
+): Promise<Appointment> {
+  const dependent = await prisma.instance.appointment.update({
+    where: { appointmentId },
+    data,
+  });
+  return dependent;
+}
 export async function getAppointmentId(
   appointmentId: number
 ): Promise<Appointment> {

@@ -145,7 +145,7 @@ model Payment {
   chargeId                String?                   @map(name: "charge_id")
   amount                  Float                     @map(name: "amount")
   paymentDate             DateTime                  @default(now()) @map(name: "payment_date")
-  appointmentId           Int                       @map(name: "appointment_id")
+  appointmentId           Int                       @unique @map(name: "appointment_id")
   paymentMethodId         Int                       @map(name: "payment_method_id")
   VoucherTypeId           Int?                      @map(name: "voucher_type_id")
   appointment             Appointment               @relation(fields: [appointmentId], references: [appointmentId])

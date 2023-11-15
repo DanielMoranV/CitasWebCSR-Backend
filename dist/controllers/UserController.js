@@ -59,9 +59,17 @@ class UserHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
-                const newUser = yield (0, UserRepository_1.createDependent)(data);
-                const message = "Operación exitosa Registro Creado";
-                (0, response_1.success)({ res, data: newUser, message });
+                const user = yield (0, UserRepository_1.userBydni)(data.dni);
+                if (user) {
+                    const message = "Usuario ya existe";
+                    console.log(message);
+                    (0, response_1.failure)({ res, message });
+                }
+                else {
+                    const newUser = yield (0, UserRepository_1.createDependent)(data);
+                    const message = "Operación exitosa Registro Creado";
+                    (0, response_1.success)({ res, data: newUser, message });
+                }
             }
             catch (error) {
                 console.log(error);
@@ -83,6 +91,26 @@ class UserHandler {
                 else {
                     const message = "Operación exitosa No se encontraron resultados";
                     (0, response_1.success)({ res, data: null, message });
+                }
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    // Lista de pacientes y dependientes
+    getPatients(_req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield (0, UserRepository_1.getPatients)();
+                if (users.length != 0) {
+                    const message = "Operación exitosa Lista de empleados";
+                    (0, response_1.success)({ res, data: users, message });
+                }
+                else {
+                    const message = "Operación exitosa sin registros";
+                    (0, response_1.success)({ res, data: users, message });
                 }
             }
             catch (error) {
@@ -157,7 +185,7 @@ class UserHandler {
                     (0, response_1.success)({ res, data: user, message });
                 }
                 else {
-                    const message = "Operación exitosa No se encontraron resultados";
+                    const message = "Operación exitosa No se encontraron resultadosxd";
                     (0, response_1.success)({ res, data: null, message });
                 }
             }

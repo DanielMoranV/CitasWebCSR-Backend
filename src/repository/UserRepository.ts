@@ -1,4 +1,4 @@
-import { User, Dependent } from "@prisma/client";
+import { User, Dependent, Access } from "@prisma/client";
 import prisma from "../connection/prisma";
 
 export async function getUsers(): Promise<User[]> {
@@ -28,9 +28,22 @@ export async function userBydniDependent(dni: string): Promise<User | null> {
     },
   });
 }
-export async function getPatients(): Promise<User | null> {
-  return await prisma.instance.user.findMany({
-    where: {},
+export async function getPatients(): Promise<any> {
+  return await prisma.instance.access.findMany({
+    where: {
+      roleId: 4,
+      active: true,
+    },
+    orderBy: {
+      userId: "asc",
+    },
+    select: {
+      user: {
+        include: {
+          dependents: true,
+        },
+      },
+    },
   });
 }
 export async function updateUserDependent(

@@ -6,6 +6,7 @@ import {
   getAppointment,
   getAppointmentId,
   getAppointmentsUserId,
+  deleteAppointment,
 } from "../repository/AppointmentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 class AppointmentHandler {
@@ -30,6 +31,21 @@ class AppointmentHandler {
       const message = "Operación exitosa Lista de empleados";
       success({ res, data: appointment, message });
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async deleteAppointmentId(req: Request, res: Response): Promise<void> {
+    try {
+      const appointmentId = Number(req.params.appointmentId);
+      const { timeSlotId } = await getAppointmentId(appointmentId);
+      await updateTimeSlot(Number(timeSlotId), { availableTurn: true });
+      const appointment = await deleteAppointment(appointmentId);
+      const message = "Operación exitosa Registro Eliminado";
+      // trabajar cuando no encuentra dni
+      success({ res, data: appointment, message });
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

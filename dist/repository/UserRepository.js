@@ -51,8 +51,21 @@ function userBydniDependent(dni) {
 exports.userBydniDependent = userBydniDependent;
 function getPatients() {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield prisma_1.default.instance.user.findMany({
-            where: {},
+        return yield prisma_1.default.instance.access.findMany({
+            where: {
+                roleId: 4,
+                active: true,
+            },
+            orderBy: {
+                userId: "asc",
+            },
+            select: {
+                user: {
+                    include: {
+                        dependents: true,
+                    },
+                },
+            },
         });
     });
 }

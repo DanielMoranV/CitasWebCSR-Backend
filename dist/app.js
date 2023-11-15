@@ -3,41 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.client = void 0;
+exports.client = exports.io = exports.server = exports.app = void 0;
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const prisma_1 = __importDefault(require("./connection/prisma"));
-const { Client } = require("whatsapp-web.js");
-const qrImage = require("qr-image");
-const fs = require("fs");
-const path = require("path");
-const client = new Client();
+const whatsappweb_1 = require("./connection/whatsappweb");
+// Whatsappweb
+const client = (0, whatsappweb_1.createWhatsAppClient)();
 exports.client = client;
-const dir = path.join(process.cwd(), "tmp");
-// Verificar si el directorio existe, si no, crearlo
-if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-}
-client.on("qr", (qr) => {
-    console.log(qr);
-    let qrSvg = qrImage.imageSync(qr, { type: "svg", margin: 4 });
-    fs.writeFileSync(path.join(dir, "qr.svg"), qrSvg, "utf-8");
-    console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
-    console.log("⚡ Actualiza F5 el navegador para mantener el mejor QR ⚡");
-});
-client.on("ready", () => {
-    console.log("¡El cliente está listo!");
-});
-client.on("message", (msg) => {
-    if (msg.body === "!ping") {
-        msg.reply("pong");
-    }
-});
 client.initialize();
 //Routes
 const routes_1 = require("./routes");
 const app = (0, express_1.default)();
+exports.app = app;
 const api_url = process.env.API;
 const cli_origin = process.env.CLIURL;
 //Settings
@@ -54,6 +35,18 @@ const corsOptions = {
     allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
 };
 app.use((0, cors_1.default)(corsOptions));
+// Crear un servidor HTTP y configurar Socket.io en él
+const server = http_1.default.createServer(app);
+exports.server = server;
+const io = new socket_io_1.Server(server, { cors: corsOptions });
+exports.io = io;
+io.on("connection", (socket) => {
+    console.log("Usuario conectado a través de Socket app.io");
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
+    // Aquí puedes agregar lógica para escuchar eventos de Socket.io si es necesario
+});
 //Routes
 try {
     (0, routes_1.useRouter)(app, api_url);
@@ -64,4 +57,3 @@ catch (error) {
 finally {
     prisma_1.default.instance.$disconnect();
 }
-exports.default = app;

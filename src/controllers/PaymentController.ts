@@ -22,7 +22,7 @@ class PaymentHandler {
         source_id: data.id,
         antifraud_details: {
           address: data.client.address,
-          address_city: data.client.address,
+          address_city: "Piura",
           country_code: "PE",
           first_name: data.client.name,
           last_name: data.client.surnames,

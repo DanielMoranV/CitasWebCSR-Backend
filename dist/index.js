@@ -8,17 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("./app"));
+const app_1 = require("./app");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            //Iniciando el servidor, escuchando...
-            app_1.default.listen(app_1.default.get("port"), () => {
-                console.log(`Server init at http://localhost:${app_1.default.get("port")} `);
+            // Iniciar el servidor HTTP (Express)
+            app_1.server.listen(app_1.app.get("port"), () => {
+                console.log(`Server init at http://localhost:${app_1.app.get("port")} `);
             });
         }
         catch (error) {

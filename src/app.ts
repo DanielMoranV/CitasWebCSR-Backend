@@ -1,40 +1,13 @@
+import http from "http";
+import { Server } from "socket.io";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import prisma from "./connection/prisma";
+import { createWhatsAppClient } from "./connection/whatsappweb";
 
-const { Client } = require("whatsapp-web.js");
-const qrImage = require("qr-image");
-const fs = require("fs");
-const path = require("path");
-
-const client = new Client();
-
-const dir = path.join(process.cwd(), "tmp");
-
-// Verificar si el directorio existe, si no, crearlo
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir);
-}
-
-client.on("qr", (qr: any) => {
-  console.log(qr);
-  let qrSvg = qrImage.imageSync(qr, { type: "svg", margin: 4 });
-  fs.writeFileSync(path.join(dir, "qr.svg"), qrSvg, "utf-8");
-  console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
-  console.log("⚡ Actualiza F5 el navegador para mantener el mejor QR ⚡");
-});
-
-client.on("ready", () => {
-  console.log("¡El cliente está listo!");
-});
-
-client.on("message", (msg: { body: string; reply: (arg0: string) => void }) => {
-  if (msg.body === "!ping") {
-    msg.reply("pong");
-  }
-});
-export { client };
+// Whatsappweb
+const client = createWhatsAppClient();
 client.initialize();
 
 //Routes
@@ -61,6 +34,19 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Crear un servidor HTTP y configurar Socket.io en él
+const server = http.createServer(app);
+const io = new Server(server, { cors: corsOptions });
+
+io.on("connection", (socket) => {
+  console.log("Usuario conectado a través de Socket app.io");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  // Aquí puedes agregar lógica para escuchar eventos de Socket.io si es necesario
+});
+
 //Routes
 try {
   useRouter(app, api_url);
@@ -70,4 +56,4 @@ try {
   prisma.instance.$disconnect();
 }
 
-export default app;
+export { app, server, io, client };

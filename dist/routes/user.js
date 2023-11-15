@@ -15,8 +15,6 @@ router.get("/currentuser", verifyToken_1.default, userHandler.currentUser);
 router.get("/:dni", verifyToken_1.default, userHandler.getUser);
 router.put("/:dni", verifyToken_1.default, userHandler.updateUser);
 router.delete("/:dni", verifyToken_1.default, userHandler.deleteUser);
-// Patients
-router.post("/patients", userHandler.createPatient);
 // Dependents
 router.post("/dependents", userHandler.createDependent);
 router.get("/:userdni/dependents", userHandler.getUserDependent);

@@ -11,6 +11,7 @@ import {
   userBydniDependent,
   updateUserDependent,
   deleteUserDependent,
+  getPatients,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
 import { accessBydni, createAccessUser } from "../repository/AccessRepository";
@@ -55,9 +56,16 @@ class UserHandler {
   public async createDependent(req: Request, res: Response): Promise<void> {
     const data = req.body;
     try {
-      const newUser = await createDependent(data);
-      const message = "Operación exitosa Registro Creado";
-      success({ res, data: newUser, message });
+      const user = await userBydni(data.dni);
+      if (user) {
+        const message = "Usuario ya existe";
+        console.log(message);
+        failure({ res, message });
+      } else {
+        const newUser = await createDependent(data);
+        const message = "Operación exitosa Registro Creado";
+        success({ res, data: newUser, message });
+      }
     } catch (error: any) {
       console.log(error);
       const message = getErrorMessageByCode(error.code);
@@ -75,6 +83,22 @@ class UserHandler {
       } else {
         const message = "Operación exitosa No se encontraron resultados";
         success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  // Lista de pacientes y dependientes
+  public async getPatients(_req: Request, res: Response): Promise<void> {
+    try {
+      const users = await getPatients();
+      if (users.length != 0) {
+        const message = "Operación exitosa Lista de empleados";
+        success({ res, data: users, message });
+      } else {
+        const message = "Operación exitosa sin registros";
+        success({ res, data: users, message });
       }
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
@@ -138,7 +162,7 @@ class UserHandler {
         const message = "Operación exitosa Registro Encontrado";
         success({ res, data: user, message });
       } else {
-        const message = "Operación exitosa No se encontraron resultados";
+        const message = "Operación exitosa No se encontraron resultadosxd";
         success({ res, data: null, message });
       }
     } catch (error: any) {

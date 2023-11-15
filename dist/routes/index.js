@@ -22,12 +22,16 @@ const infoDoctors_1 = __importDefault(require("./infoDoctors"));
 const doctor_1 = __importDefault(require("./doctor"));
 const appointment_1 = __importDefault(require("./appointment"));
 const payment_1 = __importDefault(require("./payment"));
+const patients_1 = __importDefault(require("./patients"));
+const imageQrWhatsapp_1 = __importDefault(require("./imageQrWhatsapp"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
         const router = (0, express_1.Router)();
         // Usuarios
         router.use("/users", user_1.default);
+        // Pacientes
+        router.use("/patients", verifyToken_1.default, patients_1.default);
         // Accesos
         router.use("/access", access_1.default);
         // Collaborators
@@ -41,6 +45,8 @@ function useRouter(app, api_url) {
         //Payment
         router.use("/payment", verifyToken_1.default, payment_1.default);
         app.use(api_url, router);
+        // Fotos Tickets
+        router.use("/imgqrwp", imageQrWhatsapp_1.default);
     });
 }
 exports.useRouter = useRouter;
