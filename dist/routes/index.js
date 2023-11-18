@@ -24,12 +24,14 @@ const appointment_1 = __importDefault(require("./appointment"));
 const payment_1 = __importDefault(require("./payment"));
 const patients_1 = __importDefault(require("./patients"));
 const imageQrWhatsapp_1 = __importDefault(require("./imageQrWhatsapp"));
+const imageUsers_1 = __importDefault(require("./imageUsers"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
         const router = (0, express_1.Router)();
         // Usuarios
         router.use("/users", user_1.default);
+        router.use("/imgusers", imageUsers_1.default);
         // Pacientes
         router.use("/patients", verifyToken_1.default, patients_1.default);
         // Accesos
