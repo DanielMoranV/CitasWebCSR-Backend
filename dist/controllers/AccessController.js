@@ -50,6 +50,13 @@ class AccesHandler {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { username, password } = req.body;
+                if (!username || !password) {
+                    (0, response_1.failure)({
+                        res,
+                        message: "Nombre de usuario y contraseña son obligatorios.",
+                    });
+                    return;
+                }
                 const access = yield (0, AccessRepository_1.accessBydni)(username);
                 if (!access) {
                     (0, response_1.failure)({ res, message: "dni no encontrado" });

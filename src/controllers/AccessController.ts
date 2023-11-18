@@ -47,6 +47,13 @@ class AccesHandler {
   public async loginUser(req: Request, res: Response): Promise<void> {
     try {
       const { username, password } = req.body;
+      if (!username || !password) {
+        failure({
+          res,
+          message: "Nombre de usuario y contraseña son obligatorios.",
+        });
+        return;
+      }
       const access = await accessBydni(username);
 
       if (!access) {
