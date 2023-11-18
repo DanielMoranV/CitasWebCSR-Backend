@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const errormessagebycode_1 = require("../midlewares/errormessagebycode");
 const strings_1 = require("../utils/strings");
+const multerUploadUsers_1 = require("../midlewares/multerUploadUsers");
 const UserRepository_1 = require("../repository/UserRepository");
 const response_1 = require("../utils/response");
 const AccessRepository_1 = require("../repository/AccessRepository");
@@ -207,6 +208,40 @@ class UserHandler {
             }
             catch (error) {
                 console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    updatePhotoProfile(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dni = req.params.dni;
+                // Esperar a que la imagen se cargue antes de continuar
+                yield new Promise((resolve, reject) => {
+                    (0, multerUploadUsers_1.uploadImage)(req, res, (err) => {
+                        if (err) {
+                            err.message = "Archivo no permitido";
+                            return reject(err);
+                        }
+                        resolve();
+                    });
+                });
+                // Verificación de Archivos Subidos
+                if (!req.file) {
+                    res.status(400).json({ error: "No se subió ninguna imagen" });
+                    return;
+                }
+                console.log(req.file);
+                const uploadedFileData = {
+                    photo: req.file.filename,
+                };
+                console.log(uploadedFileData);
+                const profilePhoto = yield (0, UserRepository_1.updateUser)(dni, uploadedFileData);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: profilePhoto, message });
+            }
+            catch (error) {
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }

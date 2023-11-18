@@ -13,6 +13,7 @@ router.get("/", verifyToken, userHandler.getUsers);
 router.get("/currentuser", verifyToken, userHandler.currentUser);
 router.get("/:dni", verifyToken, userHandler.getUser);
 router.put("/:dni", verifyToken, userHandler.updateUser);
+router.post("/photoprofile/:dni", userHandler.updatePhotoProfile);
 router.delete("/:dni", verifyToken, userHandler.deleteUser);
 
 // Dependents

@@ -14,6 +14,7 @@ router.get("/", verifyToken_1.default, userHandler.getUsers);
 router.get("/currentuser", verifyToken_1.default, userHandler.currentUser);
 router.get("/:dni", verifyToken_1.default, userHandler.getUser);
 router.put("/:dni", verifyToken_1.default, userHandler.updateUser);
+router.post("/photoprofile/:dni", userHandler.updatePhotoProfile);
 router.delete("/:dni", verifyToken_1.default, userHandler.deleteUser);
 // Dependents
 router.post("/dependents", userHandler.createDependent);

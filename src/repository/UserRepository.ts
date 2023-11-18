@@ -155,7 +155,7 @@ export async function createDependent(data: Dependent): Promise<Dependent> {
   return newDependent;
 }
 
-export async function updateUser(dni: string, data: User): Promise<any> {
+export async function updateUser(dni: string, data: any): Promise<any> {
   const user = await prisma.instance.user.update({
     where: { dni },
     data,

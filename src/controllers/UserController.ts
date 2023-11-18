@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import { hashPassword } from "../utils/strings";
+import { uploadImage } from "../midlewares/multerUploadUsers";
 import {
   userBydni,
   createUser,
@@ -185,7 +186,40 @@ class UserHandler {
       failure({ res, message });
     }
   }
+  public async updatePhotoProfile(req: Request, res: Response): Promise<void> {
+    try {
+      const dni = req.params.dni;
+      // Esperar a que la imagen se cargue antes de continuar
+      await new Promise<void>((resolve, reject) => {
+        uploadImage(req, res, (err) => {
+          if (err) {
+            err.message = "Archivo no permitido";
 
+            return reject(err);
+          }
+          resolve();
+        });
+      });
+
+      // Verificación de Archivos Subidos
+      if (!req.file) {
+        res.status(400).json({ error: "No se subió ninguna imagen" });
+        return;
+      }
+      console.log(req.file);
+      const uploadedFileData = {
+        photo: req.file.filename,
+      };
+      console.log(uploadedFileData);
+      const profilePhoto = await updateUser(dni, uploadedFileData);
+
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: profilePhoto, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
   // Eliminar datos de empleado (dni)
   public async deleteUser(req: Request, res: Response): Promise<void> {
     try {
