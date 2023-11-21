@@ -52,6 +52,7 @@ export async function getInfoDoctors(): Promise<any> {
   return await newprisma.$queryRaw`
     SELECT
       CONCAT("user".name, ' ', surnames) as medico,
+      photo,
       cmp,
       specialization,
       medical_service.name AS service,

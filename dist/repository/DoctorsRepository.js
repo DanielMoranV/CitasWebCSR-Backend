@@ -73,6 +73,7 @@ function getInfoDoctors() {
         return yield newprisma.$queryRaw `
     SELECT
       CONCAT("user".name, ' ', surnames) as medico,
+      photo,
       cmp,
       specialization,
       medical_service.name AS service,
