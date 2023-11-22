@@ -11,7 +11,7 @@ const router = (0, express_1.Router)();
 // Routes users
 router.post("/", verifyToken_1.default, userHandler.createUser);
 router.get("/", verifyToken_1.default, userHandler.getUsers);
-router.get("/currentuser", verifyToken_1.default, userHandler.currentUser);
+router.get("/currentuser/:dni", verifyToken_1.default, userHandler.currentUser);
 router.get("/:dni", verifyToken_1.default, userHandler.getUser);
 router.put("/:dni", verifyToken_1.default, userHandler.updateUser);
 router.post("/photoprofile/:dni", userHandler.updatePhotoProfile);

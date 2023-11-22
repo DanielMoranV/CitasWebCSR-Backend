@@ -236,11 +236,12 @@ class UserHandler {
   public async currentUser(req: Request, res: Response): Promise<void> {
     try {
       const username = req.params.dni;
-      console.log(username);
       const user = await accessBydni(username);
       const message = "Sesión Actual";
+      console.log("holiwi", username);
       success({ res, data: user, message });
     } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

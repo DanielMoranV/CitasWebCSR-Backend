@@ -266,13 +266,14 @@ class UserHandler {
     currentUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const username = res.locals.user;
-                console.log(username);
+                const username = req.params.dni;
                 const user = yield (0, AccessRepository_1.accessBydni)(username);
                 const message = "Sesión Actual";
+                console.log("holiwi", username);
                 (0, response_1.success)({ res, data: user, message });
             }
             catch (error) {
+                console.log(error);
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }
