@@ -10,7 +10,7 @@ const router = Router();
 // Routes users
 router.post("/", verifyToken, userHandler.createUser);
 router.get("/", verifyToken, userHandler.getUsers);
-router.get("/currentuser", verifyToken, userHandler.currentUser);
+router.get("/currentuser/:dni", verifyToken, userHandler.currentUser);
 router.get("/:dni", verifyToken, userHandler.getUser);
 router.put("/:dni", verifyToken, userHandler.updateUser);
 router.post("/photoprofile/:dni", userHandler.updatePhotoProfile);

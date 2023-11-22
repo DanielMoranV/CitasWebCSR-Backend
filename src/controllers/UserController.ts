@@ -235,7 +235,7 @@ class UserHandler {
   }
   public async currentUser(req: Request, res: Response): Promise<void> {
     try {
-      const username = res.locals.user;
+      const username = req.params.dni;
       console.log(username);
       const user = await accessBydni(username);
       const message = "Sesión Actual";
