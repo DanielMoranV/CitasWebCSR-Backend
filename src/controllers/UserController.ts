@@ -238,7 +238,6 @@ class UserHandler {
       const username = req.params.dni;
       const user = await accessBydni(username);
       const message = "Sesión Actual";
-      console.log("holiwi", username);
       success({ res, data: user, message });
     } catch (error: any) {
       console.log(error);
