@@ -16,7 +16,6 @@ const createWhatsAppClient = () => {
   }
 
   client.on("qr", (qr: any) => {
-    console.log(qr);
     let qrSvg = qrImage.imageSync(qr, { type: "svg", margin: 4 });
     fs.writeFileSync(path.join(dir, "qr.svg"), qrSvg, "utf-8");
     console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
