@@ -5,6 +5,7 @@ import qrImage from "qr-image";
 import fs from "fs";
 import path from "path";
 import { io } from "../app";
+import * as QRCodeTerminal from "qrcode-terminal";
 
 const createWhatsAppClient = () => {
   const client = new Client();
@@ -16,6 +17,9 @@ const createWhatsAppClient = () => {
   }
 
   client.on("qr", (qr: any) => {
+    // Genera una representación del código QR en la consola
+    QRCodeTerminal.generate(qr, { small: true });
+
     let qrSvg = qrImage.imageSync(qr, { type: "svg", margin: 4 });
     fs.writeFileSync(path.join(dir, "qr.svg"), qrSvg, "utf-8");
     console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
