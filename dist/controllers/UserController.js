@@ -269,7 +269,6 @@ class UserHandler {
                 const username = req.params.dni;
                 const user = yield (0, AccessRepository_1.accessBydni)(username);
                 const message = "Sesión Actual";
-                console.log("holiwi", username);
                 (0, response_1.success)({ res, data: user, message });
             }
             catch (error) {
