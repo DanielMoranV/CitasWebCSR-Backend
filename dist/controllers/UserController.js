@@ -120,6 +120,24 @@ class UserHandler {
             }
         });
     }
+    searchbydni(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dni = req.params.dni;
+                const user = yield (0, UserRepository_1.searchbydni)(dni);
+                if (user.dni == "") {
+                    (0, response_1.failure)({ res, message: "DNI no encontrado" });
+                    return;
+                }
+                const message = "Operación exitosa Registro Encontrado";
+                (0, response_1.success)({ res, data: user, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     // Actualizar datos de empleado (dni)
     updateUserDependent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

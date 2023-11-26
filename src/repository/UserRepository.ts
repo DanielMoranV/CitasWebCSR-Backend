@@ -1,5 +1,6 @@
 import { User, Dependent, Access } from "@prisma/client";
 import prisma from "../connection/prisma";
+import puppeteer from "puppeteer";
 
 export async function getUsers(): Promise<User[]> {
   return await prisma.instance.user.findMany({
@@ -173,4 +174,57 @@ export async function deleteUser(dni: string): Promise<any> {
     },
   });
   return deletedUser;
+}
+
+export async function searchbydni(dni: string): Promise<any> {
+  const browser = await puppeteer.launch({ headless: "new" });
+  const page = await browser.newPage();
+
+  // Navegar a la páginas
+  await page.goto("https://eldni.com/pe/buscar-datos-por-dni");
+
+  // Completar el formulario con el número de DNI
+  await page.type("#dni", dni);
+
+  // Enviar el formulario
+  await page.click("#btn-buscar-datos-por-dni");
+
+  // Esperar a que la página cargue los resultados
+  await page.waitForSelector("#column-center");
+
+  // Extraer los resultados
+  const user = await page.evaluate(() => {
+    const nombresElement = document.querySelector(
+      "#column-center table tbody tr td:nth-child(2)"
+    );
+    const nombres = nombresElement ? nombresElement.textContent?.trim() : "";
+    const dniElement = document.querySelector(
+      "#column-center table tbody tr td:nth-child(1)"
+    );
+    const dni = dniElement ? dniElement.textContent?.trim() : "";
+    const apellidopElement = document.querySelector(
+      "#column-center table tbody tr td:nth-child(3)"
+    );
+    const apellidop = apellidopElement
+      ? apellidopElement.textContent?.trim()
+      : "";
+    const apellidomElement = document.querySelector(
+      "#column-center table tbody tr td:nth-child(4)"
+    );
+    const apellidom = apellidomElement
+      ? apellidomElement.textContent?.trim()
+      : "";
+    const digitoVerificadorElement = document.querySelector(
+      "#column-center table:nth-child(3) tbody tr td mark"
+    );
+    const digitoVerificador = digitoVerificadorElement
+      ? digitoVerificadorElement.textContent?.trim()
+      : "";
+
+    return { nombres, dni, digitoVerificador, apellidop, apellidom };
+  });
+
+  console.log("Resultados:", user);
+  await browser.close();
+  return user;
 }

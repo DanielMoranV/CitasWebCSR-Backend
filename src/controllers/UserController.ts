@@ -13,6 +13,7 @@ import {
   updateUserDependent,
   deleteUserDependent,
   getPatients,
+  searchbydni,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
 import { accessBydni, createAccessUser } from "../repository/AccessRepository";
@@ -101,6 +102,21 @@ class UserHandler {
         const message = "Operación exitosa sin registros";
         success({ res, data: users, message });
       }
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async searchbydni(req: Request, res: Response): Promise<void> {
+    try {
+      const dni = req.params.dni;
+      const user = await searchbydni(dni);
+      if (user.dni == "") {
+        failure({ res, message: "DNI no encontrado" });
+        return;
+      }
+      const message = "Operación exitosa Registro Encontrado";
+      success({ res, data: user, message });
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
