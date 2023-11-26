@@ -118,7 +118,8 @@ class UserHandler {
       const message = "Operación exitosa Registro Encontrado";
       success({ res, data: user, message });
     } catch (error: any) {
-      const message = getErrorMessageByCode(error.code);
+      console.log(error);
+      const message = getErrorMessageByCode(error);
       failure({ res, message });
     }
   }

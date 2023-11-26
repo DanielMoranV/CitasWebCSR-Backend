@@ -33,7 +33,7 @@ function useRouter(app, api_url) {
         router.use("/users", user_1.default);
         router.use("/imgusers", imageUsers_1.default);
         // Pacientes
-        router.use("/patients", verifyToken_1.default, patients_1.default);
+        router.use("/patients", patients_1.default);
         // Accesos
         router.use("/access", access_1.default);
         // Collaborators

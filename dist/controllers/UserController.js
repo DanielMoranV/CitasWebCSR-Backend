@@ -133,7 +133,8 @@ class UserHandler {
                 (0, response_1.success)({ res, data: user, message });
             }
             catch (error) {
-                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error);
                 (0, response_1.failure)({ res, message });
             }
         });
