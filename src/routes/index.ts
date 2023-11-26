@@ -22,7 +22,7 @@ export async function useRouter(app: Express, api_url: string) {
   router.use("/imgusers", imgusers);
 
   // Pacientes
-  router.use("/patients", verifyToken, patients);
+  router.use("/patients", patients);
   // Accesos
   router.use("/access", access);
   // Collaborators
