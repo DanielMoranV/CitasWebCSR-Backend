@@ -119,7 +119,7 @@ class UserHandler {
       success({ res, data: user, message });
     } catch (error: any) {
       console.log(error);
-      const message = getErrorMessageByCode(error);
+      const message = error;
       failure({ res, message });
     }
   }
