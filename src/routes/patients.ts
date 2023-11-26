@@ -8,7 +8,8 @@ const userHandler = new UserHandler();
 const router = Router();
 
 // Patients
+
+router.get("/searchbydni/:dni", userHandler.searchbydni);
 router.post("/", verifyToken, userHandler.createPatient);
 router.get("/", verifyToken, userHandler.getPatients);
-router.get("/searchbydni/:dni", userHandler.searchbydni);
 export default router;

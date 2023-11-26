@@ -104,6 +104,7 @@ class UserHandler {
       }
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
+      console.log(error);
       failure({ res, message });
     }
   }

@@ -116,6 +116,7 @@ class UserHandler {
             }
             catch (error) {
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                console.log(error);
                 (0, response_1.failure)({ res, message });
             }
         });
