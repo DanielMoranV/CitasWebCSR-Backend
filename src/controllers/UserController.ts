@@ -105,7 +105,7 @@ class UserHandler {
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       console.log(error);
-      failure({ res, message });
+      failure({ res, message: "get" + message });
     }
   }
   public async searchbydni(req: Request, res: Response): Promise<void> {
@@ -168,7 +168,7 @@ class UserHandler {
     } catch (error: any) {
       console.log(error);
       const message = getErrorMessageByCode(error.code);
-      failure({ res, message });
+      failure({ res, message: "post" + message });
     }
   }
 
