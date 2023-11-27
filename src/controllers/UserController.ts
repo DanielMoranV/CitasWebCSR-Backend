@@ -121,7 +121,7 @@ class UserHandler {
     } catch (error: any) {
       console.log(error);
       const message = error;
-      failure({ res, message });
+      failure({ res, message: "holi" + error });
     }
   }
   // Actualizar datos de empleado (dni)
