@@ -105,7 +105,7 @@ class UserHandler {
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       console.log(error);
-      failure({ res, message: "get" + message });
+      failure({ res, message });
     }
   }
   public async searchbydni(req: Request, res: Response): Promise<void> {
@@ -121,7 +121,7 @@ class UserHandler {
     } catch (error: any) {
       console.log(error);
       const message = error;
-      failure({ res, message: "holi" + error });
+      failure({ res, message });
     }
   }
   // Actualizar datos de empleado (dni)
