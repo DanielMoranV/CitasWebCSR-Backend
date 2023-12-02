@@ -39,6 +39,7 @@ export async function getPatients(): Promise<any> {
       userId: "asc",
     },
     select: {
+      accessId: true,
       user: {
         include: {
           dependents: true,

@@ -61,6 +61,7 @@ function getPatients() {
                 userId: "asc",
             },
             select: {
+                accessId: true,
                 user: {
                     include: {
                         dependents: true,

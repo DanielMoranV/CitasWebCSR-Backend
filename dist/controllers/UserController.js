@@ -191,7 +191,7 @@ class UserHandler {
             catch (error) {
                 console.log(error);
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
-                (0, response_1.failure)({ res, message });
+                (0, response_1.failure)({ res, message: "post" + message });
             }
         });
     }
