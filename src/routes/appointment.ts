@@ -5,6 +5,7 @@ const appointmentHandler = new AppointmentHandler();
 
 const router = Router();
 
+//appointment
 router.post("/", appointmentHandler.createAppointment);
 router.get("/", appointmentHandler.getAppointment);
 router.get("/:appointmentId", appointmentHandler.getAppointmentId);

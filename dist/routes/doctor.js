@@ -7,7 +7,7 @@ const express_1 = require("express");
 const DoctorController_1 = __importDefault(require("../controllers/DoctorController"));
 const doctorsHandler = new DoctorController_1.default();
 const router = (0, express_1.Router)();
-// Routes users
+// Routes doctors
 router.get("/", doctorsHandler.getDoctors);
 router.put("/:doctorId", doctorsHandler.updateDoctor);
 //schedule

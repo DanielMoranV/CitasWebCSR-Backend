@@ -11,11 +11,13 @@ import payment from "./payment";
 import patients from "./patients";
 import imgqrwp from "./imageQrWhatsapp";
 import imgusers from "./imageUsers";
+import documentation from "./documentation";
 
 export async function useRouter(app: Express, api_url: string) {
   //version 1
 
   const router = Router();
+  router.use("/", documentation);
 
   // Usuarios
   router.use("/users", user);
@@ -38,9 +40,8 @@ export async function useRouter(app: Express, api_url: string) {
 
   //Payment
   router.use("/payment", verifyToken, payment);
+  // Fotos WpQR
+  router.use("/imgqrwp", imgqrwp);
 
   app.use(api_url, router);
-
-  // Fotos Tickets
-  router.use("/imgqrwp", imgqrwp);
 }

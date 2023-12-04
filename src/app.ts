@@ -17,6 +17,20 @@ const app = express();
 const api_url: string = <string>process.env.API;
 const cli_origin: string = <string>process.env.CLIURL;
 
+// Configurar la ruta principal para mostrar un mensaje de bienvenida con la lista de endpoints
+app.get("/", (req, res) => {
+  const welcomeMessage = `
+    <h1>API CSR</h1>
+    <p>Bienvenido a la documentación de la API CSR. Aquí se enumeran los endpoints disponibles:</p>
+
+    <h2>Usuarios (Users):</h2>
+    <ul>
+      <li><strong><a href="${api_url}/">GET ${api_url}/</a></strong>: Obtener información de la API</li>
+    </ul>
+  `;
+
+  res.send(welcomeMessage);
+});
 //Settings
 app.set("port", process.env.PORT || 3000);
 app.set("json spaces", 2);

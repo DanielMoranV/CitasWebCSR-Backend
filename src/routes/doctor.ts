@@ -6,7 +6,7 @@ const doctorsHandler = new DoctorsHandler();
 
 const router = Router();
 
-// Routes users
+// Routes doctors
 router.get("/", doctorsHandler.getDoctors);
 router.put("/:doctorId", doctorsHandler.updateDoctor);
 
