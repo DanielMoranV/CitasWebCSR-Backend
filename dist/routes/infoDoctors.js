@@ -7,7 +7,7 @@ const express_1 = require("express");
 const InfoDoctorsController_1 = __importDefault(require("../controllers/InfoDoctorsController"));
 const infoDoctorsHandler = new InfoDoctorsController_1.default();
 const router = (0, express_1.Router)();
-// Routes users
+// infodoctors
 router.get("/", infoDoctorsHandler.getInfoDoctors);
 router.get("/:cmp", infoDoctorsHandler.getInfoDoctor);
 exports.default = router;

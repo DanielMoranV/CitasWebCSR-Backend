@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
 
     <h2>Usuarios (Users):</h2>
     <ul>
-      <li><strong>GET ${api_url}/</strong>: Obtener información de la API</li>
       <li><strong>POST ${api_url}/users</strong>: Crear un nuevo usuario</li>
       <li><strong>GET ${api_url}/users</strong>: Obtener la lista de usuarios</li>
       <li><strong>GET ${api_url}/users/currentuser/:dni</strong>: Obtener información del usuario actual por DNI</li>

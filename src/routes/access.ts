@@ -6,7 +6,7 @@ const accesHandler = new AccesHandler();
 
 const router = Router();
 
-// Routes users
+// Routes Access
 router.post("/:username", accesHandler.createAccessUser);
 router.post("/", accesHandler.loginUser);
 router.get("/", verifyToken, accesHandler.getAccess);

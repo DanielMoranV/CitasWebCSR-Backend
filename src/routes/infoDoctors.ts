@@ -7,7 +7,7 @@ const infoDoctorsHandler = new InfoDoctorsHandler();
 
 const router = Router();
 
-// Routes users
+// infodoctors
 router.get("/", infoDoctorsHandler.getInfoDoctors);
 router.get("/:cmp", infoDoctorsHandler.getInfoDoctor);
 

@@ -26,8 +26,7 @@ app.get("/", (req, res) => {
     const welcomeMessage = `
     <h1>API CSR</h1>
     <p>Bienvenido a la documentación de la API CSR. Aquí se enumeran los endpoints disponibles:</p>
-
-    <h2>Usuarios (Users):</h2>
+    
     <ul>
       <li><strong><a href="${api_url}/">GET ${api_url}/</a></strong>: Obtener información de la API</li>
     </ul>
