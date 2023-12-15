@@ -11,6 +11,7 @@ const router = (0, express_1.Router)();
 router.post("/", appointmentHandler.createAppointment);
 router.get("/", appointmentHandler.getAppointment);
 router.get("/:appointmentId", appointmentHandler.getAppointmentId);
+router.get("/doctor/:doctorId", appointmentHandler.getAppointmentDoctorId);
 router.get("/user/:userId", appointmentHandler.getAppointmentUserId);
 router.delete("/:appointmentId", appointmentHandler.deleteAppointmentId);
 exports.default = router;

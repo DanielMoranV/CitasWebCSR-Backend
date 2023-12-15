@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTimeSlot = exports.createDoctorSchedule = exports.getDoctorSchedule = exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
+exports.updateTimeSlot = exports.createDoctorSchedule = exports.getDoctorByUserId = exports.getDoctorSchedule = exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 const client_1 = require("@prisma/client");
 const newprisma = new client_1.PrismaClient();
@@ -123,6 +123,12 @@ function getDoctorSchedule(doctorId) {
     });
 }
 exports.getDoctorSchedule = getDoctorSchedule;
+function getDoctorByUserId(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.doctor.findFirst({ where: { userId } });
+    });
+}
+exports.getDoctorByUserId = getDoctorByUserId;
 function createDoctorSchedule(data) {
     return __awaiter(this, void 0, void 0, function* () {
         const { doctorId } = data, rest = __rest(data, ["doctorId"]);

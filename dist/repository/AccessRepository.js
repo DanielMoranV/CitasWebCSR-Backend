@@ -19,7 +19,11 @@ function accessBydni(username) {
         return yield prisma_1.default.instance.access.findFirst({
             where: { username },
             include: {
-                user: true,
+                user: {
+                    include: {
+                        Doctor: true,
+                    },
+                },
                 role: true,
             },
         });

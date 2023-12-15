@@ -82,7 +82,7 @@ class PaymentHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
-                const newPayment = yield (0, PaymentRepository_1.createPayment)(data);
+                const newPayment = yield (0, PaymentRepository_1.createPaymentCash)(data);
                 const message = "Operación exitosa Registro Creado";
                 (0, response_1.success)({ res, data: newPayment, message });
             }

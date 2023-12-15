@@ -132,3 +132,53 @@ export async function getAppointment(): Promise<TimeSlot[]> {
     },
   });
 }
+
+export async function getAppointmentDoctorId(
+  doctorId: number
+): Promise<TimeSlot[]> {
+  const today = new Date();
+  return await prisma.instance.timeSlot.findMany({
+    where: {
+      orderlyTurn: {
+        gte: new Date(today.toDateString()), // Filtra registros a partir de hoy
+      },
+      Schedule: {
+        day: {
+          lt: new Date(today.getTime() + 24 * 60 * 60 * 1000), // Menos de 24 horas después del inicio del día
+        },
+        doctorId: doctorId,
+      },
+    },
+    include: {
+      Appointment: {
+        include: {
+          user: true,
+          dependent: {
+            include: {
+              user: true,
+            },
+          },
+          timeSlot: true,
+          appointmentServices: {
+            include: {
+              medicalService: true,
+            },
+          },
+        },
+        orderBy: {
+          createAt: "desc",
+        },
+      },
+      Schedule: {
+        include: {
+          doctor: {
+            include: {
+              user: true,
+              personalizedPrices: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

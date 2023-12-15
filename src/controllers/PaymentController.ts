@@ -1,7 +1,11 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import { success, failure } from "../utils/response";
-import { createPayment, getLastPayment } from "../repository/PaymentRepository";
+import {
+  createPayment,
+  createPaymentCash,
+  getLastPayment,
+} from "../repository/PaymentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 import Culqi from "culqi-node";
 const { Message } = require("whatsapp-web.js");
@@ -68,7 +72,7 @@ class PaymentHandler {
   public async createPaymentCash(req: Request, res: Response): Promise<void> {
     const data = req.body;
     try {
-      const newPayment = await createPayment(data);
+      const newPayment = await createPaymentCash(data);
       const message = "Operación exitosa Registro Creado";
       success({ res, data: newPayment, message });
     } catch (error: any) {

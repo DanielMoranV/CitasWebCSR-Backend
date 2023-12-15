@@ -7,6 +7,7 @@ import {
   getAppointmentId,
   getAppointmentsUserId,
   deleteAppointment,
+  getAppointmentDoctorId,
 } from "../repository/AppointmentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 class AppointmentHandler {
@@ -60,6 +61,22 @@ class AppointmentHandler {
       const message = "Operación exitosa Lista de empleados";
       success({ res, data: user, message });
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+
+  public async getAppointmentDoctorId(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const doctorId = Number(req.params.doctorId);
+      const user = await getAppointmentDoctorId(doctorId);
+      const message = "Operación exitosa Lista de turnos";
+      success({ res, data: user, message });
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

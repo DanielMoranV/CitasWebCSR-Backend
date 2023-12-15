@@ -5,7 +5,11 @@ export async function accessBydni(username: string): Promise<Access | null> {
   return await prisma.instance.access.findFirst({
     where: { username },
     include: {
-      user: true,
+      user: {
+        include: {
+          Doctor: true,
+        },
+      },
       role: true,
     },
   });

@@ -98,6 +98,11 @@ export async function getDoctorSchedule(
     },
   });
 }
+export async function getDoctorByUserId(
+  userId: number
+): Promise<Doctor | null> {
+  return await prisma.instance.doctor.findFirst({ where: { userId } });
+}
 export async function createDoctorSchedule(data: any): Promise<any> {
   const { doctorId, ...rest } = data;
 
