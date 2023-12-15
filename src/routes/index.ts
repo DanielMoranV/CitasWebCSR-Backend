@@ -12,6 +12,7 @@ import patients from "./patients";
 import imgqrwp from "./imageQrWhatsapp";
 import imgusers from "./imageUsers";
 import documentation from "./documentation";
+import cashRegister from "./cashRegister";
 
 export async function useRouter(app: Express, api_url: string) {
   //version 1
@@ -42,6 +43,9 @@ export async function useRouter(app: Express, api_url: string) {
   router.use("/payment", verifyToken, payment);
   // Fotos WpQR
   router.use("/imgqrwp", imgqrwp);
+
+  //Cash Register
+  router.use("/cashregister", verifyToken, cashRegister);
 
   app.use(api_url, router);
 }

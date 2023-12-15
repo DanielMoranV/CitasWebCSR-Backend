@@ -26,6 +26,7 @@ const patients_1 = __importDefault(require("./patients"));
 const imageQrWhatsapp_1 = __importDefault(require("./imageQrWhatsapp"));
 const imageUsers_1 = __importDefault(require("./imageUsers"));
 const documentation_1 = __importDefault(require("./documentation"));
+const cashRegister_1 = __importDefault(require("./cashRegister"));
 function useRouter(app, api_url) {
     return __awaiter(this, void 0, void 0, function* () {
         //version 1
@@ -50,6 +51,8 @@ function useRouter(app, api_url) {
         router.use("/payment", verifyToken_1.default, payment_1.default);
         // Fotos WpQR
         router.use("/imgqrwp", imageQrWhatsapp_1.default);
+        //Cash Register
+        router.use("/cashregister", verifyToken_1.default, cashRegister_1.default);
         app.use(api_url, router);
     });
 }

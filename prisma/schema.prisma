@@ -53,17 +53,19 @@ model Dependent {
 }
 
 model Access {
-  accessId    Int       @id @default(autoincrement()) @map(name: "access_id")
-  username    String    @unique @map(name: "username")
-  password    String    @map(name: "password")
-  status      String?   @map(name: "status")
-  active      Boolean?  @default(true) @map("active")
-  lastSession DateTime? @map(name: "last_session")
-  createAt    DateTime? @map(name: "create_at")
-  userId      Int       @map(name: "user_id")
-  roleId      Int       @map(name: "role_id")
-  user        User      @relation(fields: [userId], references: [userId])
-  role        Role      @relation(fields: [roleId], references: [roleId])
+  accessId     Int            @id @default(autoincrement()) @map(name: "access_id")
+  username     String         @unique @map(name: "username")
+  password     String         @map(name: "password")
+  status       String?        @map(name: "status")
+  active       Boolean?       @default(true) @map("active")
+  lastSession  DateTime?      @map(name: "last_session")
+  createAt     DateTime?      @map(name: "create_at")
+  userId       Int            @map(name: "user_id")
+  roleId       Int            @map(name: "role_id")
+  user         User           @relation(fields: [userId], references: [userId])
+  role         Role           @relation(fields: [roleId], references: [roleId])
+  Payment      Payment[]
+  CashRegister CashRegister[]
 
   @@map(name: "access")
 }
@@ -116,10 +118,11 @@ model CashRegisterTransaction {
   transactionId   Int          @id @default(autoincrement()) @map(name: "transaction_id")
   transactionDate DateTime     @map(name: "transaction_date")
   transactionType String       @map(name: "transaction_type")
+  category        String       @map(name: "category")
   amount          Float        @map(name: "amount")
   description     String?      @map(name: "description")
   cashRegisterId  Int          @map(name: "cash_register_id")
-  voucherNumber   Int          @map(name: "voucher_number")
+  voucherNumber   String       @map(name: "voucher_number")
   cashRegister    CashRegister @relation(fields: [cashRegisterId], references: [cashRegisterId])
   Payment         Payment?     @relation(fields: [paymentId], references: [paymentId])
   paymentId       Int?
@@ -128,34 +131,39 @@ model CashRegisterTransaction {
 }
 
 model CashRegister {
-  cashRegisterId           Int                       @id @default(autoincrement()) @map(name: "cash_register_id")
-  openingBalance           Float                     @map(name: "opening_balance")
-  currentBalance           Float                     @map(name: "current_balance")
-  lastUpdated              DateTime                  @map(name: "last_updated")
+  cashRegisterId Int       @id @default(autoincrement()) @map(name: "cash_register_id")
+  createAt       DateTime  @map(name: "create_at")
+  openingBalance Float?    @map(name: "opening_balance")
+  currentBalance Float?    @map(name: "current_balance")
+  closingBalance Float?    @map(name: "closing_balance")
+  lastUpdated    DateTime? @map(name: "last_updated")
+  active         Boolean   @default(true) @map(name: "active")
+  admissionistId Int?      @map(name: "admissionist_id")
+
+  Admissionist             Access?                   @relation(fields: [admissionistId], references: [accessId])
   cashRegisterTransactions CashRegisterTransaction[]
-  Admissionist             Admissionist?             @relation(fields: [admissionistId], references: [admissionistId])
-  admissionistId           Int?                      @map(name: "admissionist_id")
 
   @@map(name: "cash_register")
 }
 
 model Payment {
-  paymentId               Int                       @id @default(autoincrement()) @map(name: "payment_id")
-  voucherNumber           String?                   @map(name: "voucher_number")
-  chargeId                String?                   @map(name: "charge_id")
-  amount                  Float                     @map(name: "amount")
-  paymentDate             DateTime                  @default(now()) @map(name: "payment_date")
-  appointmentId           Int                       @unique @map(name: "appointment_id")
-  paymentMethodId         Int                       @map(name: "payment_method_id")
-  VoucherTypeId           Int?                      @map(name: "voucher_type_id")
+  paymentId       Int      @id @default(autoincrement()) @map(name: "payment_id")
+  voucherNumber   String?  @map(name: "voucher_number")
+  chargeId        String?  @map(name: "charge_id")
+  amount          Float    @map(name: "amount")
+  paymentDate     DateTime @default(now()) @map(name: "payment_date")
+  appointmentId   Int      @unique @map(name: "appointment_id")
+  paymentMethodId Int      @map(name: "payment_method_id")
+  VoucherTypeId   Int?     @map(name: "voucher_type_id")
+  admissionistId  Int?     @map(name: "admissionist_id")
+  userId          Int?     @map(name: "user_id")
+
   appointment             Appointment               @relation(fields: [appointmentId], references: [appointmentId])
   paymentMethod           PaymentMethod             @relation(fields: [paymentMethodId], references: [paymentMethodId])
   VoucherType             VoucherType?              @relation(fields: [VoucherTypeId], references: [VoucherTypeId])
   cashRegisterTransaction CashRegisterTransaction[]
-  Admissionist            Admissionist?             @relation(fields: [admissionistId], references: [admissionistId])
-  admissionistId          Int?                      @map(name: "admissionist_id")
   User                    User?                     @relation(fields: [userId], references: [userId])
-  userId                  Int?
+  Admissionist            Access?                   @relation(fields: [admissionistId], references: [accessId])
 
   @@map(name: "payment")
 }
@@ -263,13 +271,4 @@ model Doctor {
   Appointment          Appointment[]
 
   @@map(name: "doctor")
-}
-
-model Admissionist {
-  admissionistId Int @id @default(autoincrement()) @map(name: "admissionist_id")
-
-  Payment      Payment[]
-  CashRegister CashRegister[]
-
-  @@map(name: "admissionist")
 }

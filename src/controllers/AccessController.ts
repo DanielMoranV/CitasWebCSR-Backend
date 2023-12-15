@@ -39,6 +39,7 @@ class AccesHandler {
         failure({ res, message });
       }
     } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

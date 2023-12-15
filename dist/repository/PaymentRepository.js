@@ -12,15 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPayment = void 0;
+exports.getLastPayment = exports.createPayment = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createPayment(data) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(data);
         return yield prisma_1.default.instance.payment.create({
             data: {
                 amount: data.amount,
                 paymentDate: data.paymentDate,
+                voucherNumber: data.voucherNumber,
                 chargeId: data.chargeId,
+                Admissionist: {
+                    connect: {
+                        accessId: data.admissionistId,
+                    },
+                },
                 User: {
                     connect: {
                         userId: data.userId,
@@ -46,3 +53,13 @@ function createPayment(data) {
     });
 }
 exports.createPayment = createPayment;
+function getLastPayment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.payment.findFirst({
+            orderBy: {
+                paymentId: "desc",
+            },
+        });
+    });
+}
+exports.getLastPayment = getLastPayment;

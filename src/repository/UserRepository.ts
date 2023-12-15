@@ -36,7 +36,9 @@ export async function getPatients(): Promise<any> {
       active: true,
     },
     orderBy: {
-      userId: "asc",
+      user: {
+        surnames: "asc", // Ordenar por apellidos en orden ascendente
+      },
     },
     select: {
       accessId: true,

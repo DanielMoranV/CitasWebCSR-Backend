@@ -6,6 +6,7 @@ const paymentHandler = new PaymentHandler();
 const router = Router();
 
 router.post("/", paymentHandler.createPayment);
-//router.get("/:paymentId", paymentHandler.getPaymentId);
+router.post("/cash", paymentHandler.createPaymentCash);
+router.get("/lastpayment", paymentHandler.getLastPayment);
 
 export default router;

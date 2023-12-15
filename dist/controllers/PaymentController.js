@@ -78,5 +78,40 @@ class PaymentHandler {
             }
         });
     }
+    createPaymentCash(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
+            try {
+                const newPayment = yield (0, PaymentRepository_1.createPayment)(data);
+                const message = "Operación exitosa Registro Creado";
+                (0, response_1.success)({ res, data: newPayment, message });
+            }
+            catch (error) {
+                console.log(error);
+                if (error.code) {
+                    const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                    (0, response_1.failure)({ res, message });
+                }
+                else {
+                    const message = error.user_message;
+                    console.log(message);
+                    (0, response_1.failure)({ res, message });
+                }
+            }
+        });
+    }
+    getLastPayment(_req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const payment = yield (0, PaymentRepository_1.getLastPayment)();
+                const message = "Operación exitosa Lista de Pagos";
+                (0, response_1.success)({ res, data: payment, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
 }
 exports.default = PaymentHandler;

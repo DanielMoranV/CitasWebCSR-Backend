@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import { success, failure } from "../utils/response";
-import { createPayment } from "../repository/PaymentRepository";
+import { createPayment, getLastPayment } from "../repository/PaymentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 import Culqi from "culqi-node";
 const { Message } = require("whatsapp-web.js");
@@ -65,17 +65,34 @@ class PaymentHandler {
       }
     }
   }
-  // public async getPaymentId(req: Request, res: Response): Promise<void> {
-  //   try {
-  //     const appointmentId = Number(req.params.appointmentId);
-  //     const appointment = await getPaymentId(appointmentId);
-  //     const message = "Operación exitosa Lista de empleados";
-  //     success({ res, data: appointment, message });
-  //   } catch (error: any) {
-  //     const message = getErrorMessageByCode(error.code);
-  //     failure({ res, message });
-  //   }
-  // }
+  public async createPaymentCash(req: Request, res: Response): Promise<void> {
+    const data = req.body;
+    try {
+      const newPayment = await createPayment(data);
+      const message = "Operación exitosa Registro Creado";
+      success({ res, data: newPayment, message });
+    } catch (error: any) {
+      console.log(error);
+      if (error.code) {
+        const message = getErrorMessageByCode(error.code);
+        failure({ res, message });
+      } else {
+        const message = error.user_message;
+        console.log(message);
+        failure({ res, message });
+      }
+    }
+  }
+  public async getLastPayment(_req: Request, res: Response): Promise<void> {
+    try {
+      const payment = await getLastPayment();
+      const message = "Operación exitosa Lista de Pagos";
+      success({ res, data: payment, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
 }
 
 export default PaymentHandler;

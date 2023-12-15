@@ -104,8 +104,16 @@ function getInfoDoctor(cmp) {
 exports.getInfoDoctor = getInfoDoctor;
 function getDoctorSchedule(doctorId) {
     return __awaiter(this, void 0, void 0, function* () {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Establecer a medianoche para obtener el inicio del día
         return yield prisma_1.default.instance.schedule.findMany({
-            where: { doctorId, availableSchedule: true },
+            where: {
+                doctorId,
+                availableSchedule: true,
+                day: {
+                    gte: today, // Obtener registros a partir de hoy
+                },
+            },
             include: {
                 timeSlot: {
                     where: { availableTurn: true },

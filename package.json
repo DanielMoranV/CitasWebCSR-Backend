@@ -44,6 +44,6 @@
     "concurrently": "^8.2.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
-    "prisma": "^5.5.2"
+    "prisma": "^5.7.0"
   }
 }
