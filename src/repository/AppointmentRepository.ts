@@ -130,6 +130,9 @@ export async function getAppointment(): Promise<TimeSlot[]> {
         },
       },
     },
+    orderBy: {
+      orderlyTurn: "asc",
+    },
   });
 }
 
@@ -179,6 +182,9 @@ export async function getAppointmentDoctorId(
           },
         },
       },
+    },
+    orderBy: {
+      orderlyTurn: "asc",
     },
   });
 }

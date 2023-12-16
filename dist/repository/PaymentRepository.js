@@ -55,7 +55,6 @@ function createPaymentCash(data) {
 exports.createPaymentCash = createPaymentCash;
 function createPayment(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(data);
         return yield prisma_1.default.instance.payment.create({
             data: {
                 amount: data.amount,

@@ -147,6 +147,9 @@ function getAppointment() {
                     },
                 },
             },
+            orderBy: {
+                orderlyTurn: "asc",
+            },
         });
     });
 }
@@ -196,6 +199,9 @@ function getAppointmentDoctorId(doctorId) {
                         },
                     },
                 },
+            },
+            orderBy: {
+                orderlyTurn: "asc",
             },
         });
     });

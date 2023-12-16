@@ -38,7 +38,6 @@ export async function createPaymentCash(data: any): Promise<Payment> {
   });
 }
 export async function createPayment(data: any): Promise<Payment> {
-  console.log(data);
   return await prisma.instance.payment.create({
     data: {
       amount: data.amount,
