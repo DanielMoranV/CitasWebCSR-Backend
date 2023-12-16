@@ -8,6 +8,7 @@ import {
   getAppointmentsUserId,
   deleteAppointment,
   getAppointmentDoctorId,
+  updateAppointment,
 } from "../repository/AppointmentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 class AppointmentHandler {
@@ -32,6 +33,19 @@ class AppointmentHandler {
       const message = "Operación exitosa Lista de empleados";
       success({ res, data: appointment, message });
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async updateAppointmentId(req: Request, res: Response): Promise<void> {
+    try {
+      const appointmentId = Number(req.params.appointmentId);
+      const data = req.body;
+      const appointment = await updateAppointment(appointmentId, data);
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: appointment, message });
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

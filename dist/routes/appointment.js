@@ -14,4 +14,5 @@ router.get("/:appointmentId", appointmentHandler.getAppointmentId);
 router.get("/doctor/:doctorId", appointmentHandler.getAppointmentDoctorId);
 router.get("/user/:userId", appointmentHandler.getAppointmentUserId);
 router.delete("/:appointmentId", appointmentHandler.deleteAppointmentId);
+router.put("/:appointmentId", appointmentHandler.updateAppointmentId);
 exports.default = router;

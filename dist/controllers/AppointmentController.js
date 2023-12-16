@@ -45,6 +45,22 @@ class AppointmentHandler {
             }
         });
     }
+    updateAppointmentId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const appointmentId = Number(req.params.appointmentId);
+                const data = req.body;
+                const appointment = yield (0, AppointmentRepository_1.updateAppointment)(appointmentId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: appointment, message });
+            }
+            catch (error) {
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     deleteAppointmentId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
