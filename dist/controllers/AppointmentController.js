@@ -31,6 +31,24 @@ class AppointmentHandler {
             }
         });
     }
+    createAppointmentHistory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
+            try {
+                yield (0, AppointmentRepository_1.updateAppointment)(Number(data.appointmentId), {
+                    status: "atendido",
+                });
+                const newAppointment = yield (0, AppointmentRepository_1.createAppointmentHistory)(data);
+                const message = "Operación exitosa Registro Creado";
+                (0, response_1.success)({ res, data: newAppointment, message });
+            }
+            catch (error) {
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     getAppointmentId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -40,6 +58,22 @@ class AppointmentHandler {
                 (0, response_1.success)({ res, data: appointment, message });
             }
             catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    updateAppointmentHistoryId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const appointmentHistoryId = Number(req.params.appointmentHistoryId);
+                const data = req.body;
+                const appointmentHistory = yield (0, AppointmentRepository_1.updateAppointmentHistory)(appointmentHistoryId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: appointmentHistory, message });
+            }
+            catch (error) {
+                console.log(error);
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }
@@ -74,6 +108,20 @@ class AppointmentHandler {
             }
             catch (error) {
                 console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
+    getAppointmentsHistoryUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = Number(req.params.userId);
+                const user = yield (0, AppointmentRepository_1.getAppointmentsHistoryUser)(userId);
+                const message = "Operación exitosa Lista de empleados";
+                (0, response_1.success)({ res, data: user, message });
+            }
+            catch (error) {
                 const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
                 (0, response_1.failure)({ res, message });
             }

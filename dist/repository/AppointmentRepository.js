@@ -12,8 +12,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAppointmentDoctorId = exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.updateAppointment = exports.deleteAppointment = exports.createAppointment = void 0;
+exports.getAppointmentDoctorId = exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.updateAppointment = exports.deleteAppointment = exports.createAppointment = exports.getAppointmentsHistoryUser = exports.getAppointmentsHistoryUserIdDoctorId = exports.updateAppointmentHistory = exports.createAppointmentHistory = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
+function createAppointmentHistory(data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const newAppointmentHistory = yield prisma_1.default.instance.appointmentHistory.create({ data });
+        return newAppointmentHistory;
+    });
+}
+exports.createAppointmentHistory = createAppointmentHistory;
+function updateAppointmentHistory(appointmentHistoryId, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const appointmentHistory = yield prisma_1.default.instance.appointmentHistory.update({
+            where: { appointmentHistoryId },
+            data,
+        });
+        return appointmentHistory;
+    });
+}
+exports.updateAppointmentHistory = updateAppointmentHistory;
+function getAppointmentsHistoryUserIdDoctorId(userId, doctorId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.appointmentHistory.findMany({
+            where: { userId, doctorId },
+            include: {
+                user: true,
+                doctor: true,
+                appointment: {
+                    include: {
+                        timeSlot: true,
+                    },
+                },
+            },
+            orderBy: {
+                appointmentHistoryId: "desc",
+            },
+        });
+    });
+}
+exports.getAppointmentsHistoryUserIdDoctorId = getAppointmentsHistoryUserIdDoctorId;
+function getAppointmentsHistoryUser(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.appointmentHistory.findMany({
+            where: { userId },
+            include: {
+                user: true,
+                doctor: {
+                    include: {
+                        user: true,
+                    },
+                },
+                appointment: {
+                    include: {
+                        timeSlot: true,
+                    },
+                },
+            },
+            orderBy: {
+                appointmentHistoryId: "desc",
+            },
+        });
+    });
+}
+exports.getAppointmentsHistoryUser = getAppointmentsHistoryUser;
 function createAppointment(data) {
     return __awaiter(this, void 0, void 0, function* () {
         const newAppointment = yield prisma_1.default.instance.appointment.create({
@@ -98,6 +159,7 @@ function getAppointmentsUserId(userId) {
                         medicalService: true,
                     },
                 },
+                appointmentHistories: true,
             },
             orderBy: {
                 createAt: "desc",

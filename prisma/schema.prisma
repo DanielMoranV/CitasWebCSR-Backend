@@ -181,8 +181,9 @@ model PersonalizedPrice {
 
 model AppointmentHistory {
   appointmentHistoryId Int         @id @default(autoincrement()) @map(name: "appointment_history_id")
-  diagnosis            String      @map(name: "diagnosis")
-  treatment            String      @map(name: "treatment")
+  reason               String?     @map(name: "reason")
+  diagnosis            String?     @map(name: "diagnosis")
+  treatment            String?     @map(name: "treatment")
   userId               Int         @map(name: "user_id")
   doctorId             Int         @map(name: "doctor_id")
   appointmentId        Int         @map(name: "appointment_id")

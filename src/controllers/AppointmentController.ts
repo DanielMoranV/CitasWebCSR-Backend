@@ -9,6 +9,9 @@ import {
   deleteAppointment,
   getAppointmentDoctorId,
   updateAppointment,
+  createAppointmentHistory,
+  getAppointmentsHistoryUser,
+  updateAppointmentHistory,
 } from "../repository/AppointmentRepository";
 import { updateTimeSlot } from "../repository/DoctorsRepository";
 class AppointmentHandler {
@@ -26,6 +29,24 @@ class AppointmentHandler {
       failure({ res, message });
     }
   }
+  public async createAppointmentHistory(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const data = req.body;
+    try {
+      await updateAppointment(Number(data.appointmentId), {
+        status: "atendido",
+      });
+      const newAppointment = await createAppointmentHistory(data);
+      const message = "Operación exitosa Registro Creado";
+      success({ res, data: newAppointment, message });
+    } catch (error: any) {
+      console.log(error);
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
   public async getAppointmentId(req: Request, res: Response): Promise<void> {
     try {
       const appointmentId = Number(req.params.appointmentId);
@@ -33,6 +54,25 @@ class AppointmentHandler {
       const message = "Operación exitosa Lista de empleados";
       success({ res, data: appointment, message });
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async updateAppointmentHistoryId(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const appointmentHistoryId = Number(req.params.appointmentHistoryId);
+      const data = req.body;
+      const appointmentHistory = await updateAppointmentHistory(
+        appointmentHistoryId,
+        data
+      );
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: appointmentHistory, message });
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }
@@ -61,6 +101,20 @@ class AppointmentHandler {
       success({ res, data: appointment, message });
     } catch (error: any) {
       console.log(error);
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async getAppointmentsHistoryUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const userId = Number(req.params.userId);
+      const user = await getAppointmentsHistoryUser(userId);
+      const message = "Operación exitosa Lista de empleados";
+      success({ res, data: user, message });
+    } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

@@ -1,6 +1,67 @@
-import { Appointment, TimeSlot } from "@prisma/client";
+import { Appointment, AppointmentHistory, TimeSlot } from "@prisma/client";
 import prisma from "../connection/prisma";
 
+export async function createAppointmentHistory(
+  data: AppointmentHistory
+): Promise<AppointmentHistory> {
+  const newAppointmentHistory = await prisma.instance.appointmentHistory.create(
+    { data }
+  );
+  return newAppointmentHistory;
+}
+export async function updateAppointmentHistory(
+  appointmentHistoryId: number,
+  data: Appointment | any
+): Promise<AppointmentHistory> {
+  const appointmentHistory = await prisma.instance.appointmentHistory.update({
+    where: { appointmentHistoryId },
+    data,
+  });
+  return appointmentHistory;
+}
+export async function getAppointmentsHistoryUserIdDoctorId(
+  userId: number,
+  doctorId: number
+): Promise<AppointmentHistory[]> {
+  return await prisma.instance.appointmentHistory.findMany({
+    where: { userId, doctorId }, // Filtra por el ID de usuario
+    include: {
+      user: true,
+      doctor: true,
+      appointment: {
+        include: {
+          timeSlot: true,
+        },
+      },
+    },
+    orderBy: {
+      appointmentHistoryId: "desc",
+    },
+  });
+}
+export async function getAppointmentsHistoryUser(
+  userId: number
+): Promise<AppointmentHistory[]> {
+  return await prisma.instance.appointmentHistory.findMany({
+    where: { userId }, // Filtra por el ID de usuario
+    include: {
+      user: true,
+      doctor: {
+        include: {
+          user: true,
+        },
+      },
+      appointment: {
+        include: {
+          timeSlot: true,
+        },
+      },
+    },
+    orderBy: {
+      appointmentHistoryId: "desc",
+    },
+  });
+}
 export async function createAppointment(
   data: Appointment
 ): Promise<Appointment> {
@@ -24,7 +85,7 @@ export async function deleteAppointment(
 }
 export async function updateAppointment(
   appointmentId: number,
-  data: Appointment
+  data: Appointment | any
 ): Promise<Appointment> {
   const dependent = await prisma.instance.appointment.update({
     where: { appointmentId },
@@ -83,6 +144,7 @@ export async function getAppointmentsUserId(
           medicalService: true,
         },
       },
+      appointmentHistories: true,
     },
     orderBy: {
       createAt: "desc",
@@ -135,7 +197,6 @@ export async function getAppointment(): Promise<TimeSlot[]> {
     },
   });
 }
-
 export async function getAppointmentDoctorId(
   doctorId: number
 ): Promise<TimeSlot[]> {

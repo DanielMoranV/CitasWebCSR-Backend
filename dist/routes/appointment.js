@@ -9,6 +9,9 @@ const appointmentHandler = new AppointmentController_1.default();
 const router = (0, express_1.Router)();
 //appointment
 router.post("/", appointmentHandler.createAppointment);
+router.post("/appointmenthistory", appointmentHandler.createAppointmentHistory);
+router.get("/appointmenthistory/:userId", appointmentHandler.getAppointmentsHistoryUser);
+router.put("/appointmenthistory/:appointmentHistoryId", appointmentHandler.updateAppointmentHistoryId);
 router.get("/", appointmentHandler.getAppointment);
 router.get("/:appointmentId", appointmentHandler.getAppointmentId);
 router.get("/doctor/:doctorId", appointmentHandler.getAppointmentDoctorId);
