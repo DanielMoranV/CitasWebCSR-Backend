@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import prisma from "./connection/prisma";
 import { createWhatsAppClient } from "./connection/whatsappweb";
+import path from "path";
 
 // Whatsappweb
 const client = createWhatsAppClient();
@@ -16,6 +17,8 @@ import { useRouter } from "./routes";
 const app = express();
 const api_url: string = <string>process.env.API;
 const cli_origin: string = <string>process.env.CLIURL;
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // Configurar la ruta principal para mostrar un mensaje de bienvenida con la lista de endpoints
 app.get("/", (req, res) => {
