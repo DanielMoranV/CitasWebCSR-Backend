@@ -25,7 +25,7 @@ const handleImageNotFoundError = (req: any, res: any, next: any) => {
 // Ruta para generar la URL dinámica del código QR
 router.get("/urlqr/:nameimg", handleImageNotFoundError, async (req, res) => {
   try {
-    const dynamicURL = `${req.protocol}s://${req.get(
+    const dynamicURL = `${req.protocol}://${req.get(
       "host"
     )}/api/v1/imgqrwp/urlqr/image/${req.params.nameimg}/${Date.now()}`;
 

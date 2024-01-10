@@ -28,7 +28,7 @@ router.get(
   handleImageNotFoundError,
   async (req, res) => {
     try {
-      const dynamicURL = `${req.protocol}s://${req.get(
+      const dynamicURL = `${req.protocol}://${req.get(
         "host"
       )}/api/v1/imgusers/photoprofile/image/${
         req.params.nameimg

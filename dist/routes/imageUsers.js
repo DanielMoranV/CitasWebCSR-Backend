@@ -29,7 +29,7 @@ const handleImageNotFoundError = (req, res, next) => {
 // Ruta para generar la URL dinámica del código QR
 router.get("/photoprofile/:nameimg", handleImageNotFoundError, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const dynamicURL = `${req.protocol}s://${req.get("host")}/api/v1/imgusers/photoprofile/image/${req.params.nameimg}/${Date.now()}`;
+        const dynamicURL = `${req.protocol}://${req.get("host")}/api/v1/imgusers/photoprofile/image/${req.params.nameimg}/${Date.now()}`;
         res.json({ url: dynamicURL });
     }
     catch (error) {

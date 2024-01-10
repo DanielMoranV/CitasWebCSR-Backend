@@ -11,6 +11,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const prisma_1 = __importDefault(require("./connection/prisma"));
 const whatsappweb_1 = require("./connection/whatsappweb");
+const path_1 = __importDefault(require("path"));
 // Whatsappweb
 const client = (0, whatsappweb_1.createWhatsAppClient)();
 exports.client = client;
@@ -21,6 +22,7 @@ const app = (0, express_1.default)();
 exports.app = app;
 const api_url = process.env.API;
 const cli_origin = process.env.CLIURL;
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 // Configurar la ruta principal para mostrar un mensaje de bienvenida con la lista de endpoints
 app.get("/", (req, res) => {
     const welcomeMessage = `
