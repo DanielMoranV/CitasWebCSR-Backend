@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { getErrorMessageByCode } from "../midlewares/errormessagebycode";
 import {
   getDoctorScheduleAll,
-  getDoctorScheduleAvailable
+  getDoctorScheduleAvailable,
   getDoctors,
   updateDoctor,
   updatePersonalizedPrice,
