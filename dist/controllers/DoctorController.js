@@ -62,6 +62,22 @@ class DoctorsHandler {
             }
         });
     }
+    updateSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const scheduleId = Number(req.params.scheduleId);
+                const data = req.body;
+                const schedule = yield (0, DoctorsRepository_1.updateSchedule)(scheduleId, data);
+                const message = "Operación exitosa Registro Actualizado";
+                (0, response_1.success)({ res, data: schedule, message });
+            }
+            catch (error) {
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+                console.log(error);
+            }
+        });
+    }
     getDoctorSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

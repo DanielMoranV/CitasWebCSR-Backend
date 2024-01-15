@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import DoctorsHandler from "../controllers/DoctorController";
+import { rootCertificates } from "tls";
 
 const doctorsHandler = new DoctorsHandler();
 
@@ -13,6 +14,7 @@ router.put("/:doctorId", doctorsHandler.updateDoctor);
 //schedule
 router.get("/:doctorId/schedule", doctorsHandler.getDoctorSchedule);
 router.post("/schedule", doctorsHandler.createDoctorSchedule);
+router.patch("/schedule/:scheduleId", doctorsHandler.updateSchedule);
 
 // PersonalizedPrice
 router.put(

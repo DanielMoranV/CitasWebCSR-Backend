@@ -86,11 +86,11 @@ export async function getDoctorSchedule(
   return await prisma.instance.schedule.findMany({
     where: {
       doctorId,
-      availableSchedule: true,
       day: {
         gte: today, // Obtener registros a partir de hoy
       },
     },
+    orderBy: { day: "asc" },
     include: {
       timeSlot: {
         where: { availableTurn: true },
@@ -102,6 +102,12 @@ export async function getDoctorByUserId(
   userId: number
 ): Promise<Doctor | null> {
   return await prisma.instance.doctor.findFirst({ where: { userId } });
+}
+export async function updateSchedule(
+  scheduleId: number,
+  data: Schedule
+): Promise<Schedule> {
+  return await prisma.instance.schedule.update({ where: { scheduleId }, data });
 }
 export async function createDoctorSchedule(data: any): Promise<any> {
   const { doctorId, ...rest } = data;

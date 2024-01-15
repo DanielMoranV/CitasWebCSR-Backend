@@ -8,8 +8,8 @@ import { createWhatsAppClient } from "./connection/whatsappweb";
 import path from "path";
 
 // Whatsappweb
-const client = createWhatsAppClient();
-client.initialize();
+// const client = createWhatsAppClient();
+// client.initialize();
 
 //Routes
 import { useRouter } from "./routes";
@@ -45,7 +45,7 @@ app.use(express.json());
 // Configurar CORS
 const corsOptions = {
   origin: cli_origin, // Cambiar a la URL permitida para las solicitudes
-  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Métodos permitidos
   allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
 };
 app.use(cors(corsOptions));

@@ -10,12 +10,10 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const prisma_1 = __importDefault(require("./connection/prisma"));
-const whatsappweb_1 = require("./connection/whatsappweb");
 const path_1 = __importDefault(require("path"));
 // Whatsappweb
-const client = (0, whatsappweb_1.createWhatsAppClient)();
-exports.client = client;
-client.initialize();
+// const client = createWhatsAppClient();
+// client.initialize();
 //Routes
 const routes_1 = require("./routes");
 const app = (0, express_1.default)();
@@ -45,7 +43,7 @@ app.use(express_1.default.json());
 // Configurar CORS
 const corsOptions = {
     origin: cli_origin,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
 };
 app.use((0, cors_1.default)(corsOptions));

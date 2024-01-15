@@ -13,6 +13,7 @@ router.put("/:doctorId", doctorsHandler.updateDoctor);
 //schedule
 router.get("/:doctorId/schedule", doctorsHandler.getDoctorSchedule);
 router.post("/schedule", doctorsHandler.createDoctorSchedule);
+router.patch("/schedule/:scheduleId", doctorsHandler.updateSchedule);
 // PersonalizedPrice
 router.put("/personalizedPrice/:personalizedPriceId", doctorsHandler.updatePersonalizedPrice);
 exports.default = router;

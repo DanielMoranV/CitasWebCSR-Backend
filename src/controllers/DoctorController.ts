@@ -6,6 +6,7 @@ import {
   updateDoctor,
   updatePersonalizedPrice,
   createDoctorSchedule,
+  updateSchedule,
 } from "../repository/DoctorsRepository";
 import { success, failure } from "../utils/response";
 
@@ -53,6 +54,19 @@ class DoctorsHandler {
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
+    }
+  }
+  public async updateSchedule(req: Request, res: Response) {
+    try {
+      const scheduleId = Number(req.params.scheduleId);
+      const data = req.body;
+      const schedule = await updateSchedule(scheduleId, data);
+      const message = "Operación exitosa Registro Actualizado";
+      success({ res, data: schedule, message });
+    } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+      console.log(error);
     }
   }
   public async getDoctorSchedule(req: Request, res: Response): Promise<void> {
