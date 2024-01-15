@@ -7,9 +7,9 @@ import prisma from "./connection/prisma";
 import { createWhatsAppClient } from "./connection/whatsappweb";
 import path from "path";
 
-// Whatsappweb
-// const client = createWhatsAppClient();
-// client.initialize();
+//Whatsappweb;
+const client = createWhatsAppClient();
+client.initialize();
 
 //Routes
 import { useRouter } from "./routes";

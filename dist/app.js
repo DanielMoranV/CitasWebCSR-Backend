@@ -10,10 +10,12 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const prisma_1 = __importDefault(require("./connection/prisma"));
+const whatsappweb_1 = require("./connection/whatsappweb");
 const path_1 = __importDefault(require("path"));
-// Whatsappweb
-// const client = createWhatsAppClient();
-// client.initialize();
+//Whatsappweb;
+const client = (0, whatsappweb_1.createWhatsAppClient)();
+exports.client = client;
+client.initialize();
 //Routes
 const routes_1 = require("./routes");
 const app = (0, express_1.default)();
