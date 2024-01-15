@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTimeSlot = exports.createDoctorSchedule = exports.updateSchedule = exports.getDoctorByUserId = exports.getDoctorSchedule = exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
+exports.updateTimeSlot = exports.createDoctorSchedule = exports.updateSchedule = exports.getDoctorByUserId = exports.getDoctorScheduleAvailable = exports.getDoctorScheduleAll = exports.getInfoDoctor = exports.getInfoDoctors = exports.updatePersonalizedPrice = exports.updateDoctor = exports.getDoctors = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 const client_1 = require("@prisma/client");
 const newprisma = new client_1.PrismaClient();
@@ -102,7 +102,7 @@ function getInfoDoctor(cmp) {
     });
 }
 exports.getInfoDoctor = getInfoDoctor;
-function getDoctorSchedule(doctorId) {
+function getDoctorScheduleAll(doctorId) {
     return __awaiter(this, void 0, void 0, function* () {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Establecer a medianoche para obtener el inicio del día
@@ -116,13 +116,38 @@ function getDoctorSchedule(doctorId) {
             orderBy: { day: "asc" },
             include: {
                 timeSlot: {
-                    where: { availableTurn: true },
+                    orderBy: { nTurn: "asc" },
                 },
             },
         });
     });
 }
-exports.getDoctorSchedule = getDoctorSchedule;
+exports.getDoctorScheduleAll = getDoctorScheduleAll;
+function getDoctorScheduleAvailable(doctorId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Establecer a medianoche para obtener el inicio del día
+        return yield prisma_1.default.instance.schedule.findMany({
+            where: {
+                doctorId,
+                availableSchedule: true,
+                day: {
+                    gte: today, // Obtener registros a partir de hoy
+                },
+            },
+            orderBy: { day: "asc" },
+            include: {
+                timeSlot: {
+                    where: {
+                        availableTurn: true,
+                    },
+                    orderBy: { nTurn: "asc" },
+                },
+            },
+        });
+    });
+}
+exports.getDoctorScheduleAvailable = getDoctorScheduleAvailable;
 function getDoctorByUserId(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_1.default.instance.doctor.findFirst({ where: { userId } });

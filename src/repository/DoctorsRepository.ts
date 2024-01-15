@@ -77,7 +77,7 @@ export async function getInfoDoctor(cmp: string): Promise<any> {
   `;
 }
 
-export async function getDoctorSchedule(
+export async function getDoctorScheduleAll(
   doctorId: number
 ): Promise<Schedule[] | null> {
   const today = new Date();
@@ -93,7 +93,32 @@ export async function getDoctorSchedule(
     orderBy: { day: "asc" },
     include: {
       timeSlot: {
-        where: { availableTurn: true },
+        orderBy: { nTurn: "asc" },
+      },
+    },
+  });
+}
+export async function getDoctorScheduleAvailable(
+  doctorId: number
+): Promise<Schedule[] | null> {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Establecer a medianoche para obtener el inicio del día
+
+  return await prisma.instance.schedule.findMany({
+    where: {
+      doctorId,
+      availableSchedule: true,
+      day: {
+        gte: today, // Obtener registros a partir de hoy
+      },
+    },
+    orderBy: { day: "asc" },
+    include: {
+      timeSlot: {
+        where: {
+          availableTurn: true,
+        },
+        orderBy: { nTurn: "asc" },
       },
     },
   });

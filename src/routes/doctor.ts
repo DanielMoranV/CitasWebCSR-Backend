@@ -12,7 +12,11 @@ router.get("/", doctorsHandler.getDoctors);
 router.put("/:doctorId", doctorsHandler.updateDoctor);
 
 //schedule
-router.get("/:doctorId/schedule", doctorsHandler.getDoctorSchedule);
+router.get("/:doctorId/schedule", doctorsHandler.getDoctorScheduleAll);
+router.get(
+  "/:doctorId/scheduleAvailable",
+  doctorsHandler.getDoctorScheduleAvailable
+);
 router.post("/schedule", doctorsHandler.createDoctorSchedule);
 router.patch("/schedule/:scheduleId", doctorsHandler.updateSchedule);
 
