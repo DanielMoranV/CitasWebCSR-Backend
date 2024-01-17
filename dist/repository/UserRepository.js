@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchbydni = exports.deleteUser = exports.updateUser = exports.createDependent = exports.createUser = exports.deleteUserDependent = exports.updateUserDependent = exports.getPatients = exports.userBydniDependent = exports.userBydni = exports.getUsers = void 0;
+exports.deleteUser = exports.updateUser = exports.createDependent = exports.createUser = exports.deleteUserDependent = exports.updateUserDependent = exports.getPatients = exports.userBydniDependent = exports.userBydni = exports.getUsers = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
-const puppeteer_1 = __importDefault(require("puppeteer"));
+//import puppeteer from "puppeteer";
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_1.default.instance.user.findMany({
@@ -212,42 +212,48 @@ function deleteUser(dni) {
     });
 }
 exports.deleteUser = deleteUser;
-function searchbydni(dni) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const browser = yield puppeteer_1.default.launch({ headless: "new" });
-        const page = yield browser.newPage();
-        // Navegar a la páginas
-        yield page.goto("https://eldni.com/pe/buscar-datos-por-dni");
-        // Completar el formulario con el número de DNI
-        yield page.type("#dni", dni);
-        // Enviar el formulario
-        yield page.click("#btn-buscar-datos-por-dni");
-        // Esperar a que la página cargue los resultados
-        yield page.waitForSelector("#column-center");
-        // Extraer los resultados
-        const user = yield page.evaluate(() => {
-            var _a, _b, _c, _d, _e;
-            const nombresElement = document.querySelector("#column-center table tbody tr td:nth-child(2)");
-            const nombres = nombresElement ? (_a = nombresElement.textContent) === null || _a === void 0 ? void 0 : _a.trim() : "";
-            const dniElement = document.querySelector("#column-center table tbody tr td:nth-child(1)");
-            const dni = dniElement ? (_b = dniElement.textContent) === null || _b === void 0 ? void 0 : _b.trim() : "";
-            const apellidopElement = document.querySelector("#column-center table tbody tr td:nth-child(3)");
-            const apellidop = apellidopElement
-                ? (_c = apellidopElement.textContent) === null || _c === void 0 ? void 0 : _c.trim()
-                : "";
-            const apellidomElement = document.querySelector("#column-center table tbody tr td:nth-child(4)");
-            const apellidom = apellidomElement
-                ? (_d = apellidomElement.textContent) === null || _d === void 0 ? void 0 : _d.trim()
-                : "";
-            const digitoVerificadorElement = document.querySelector("#column-center table:nth-child(3) tbody tr td mark");
-            const digitoVerificador = digitoVerificadorElement
-                ? (_e = digitoVerificadorElement.textContent) === null || _e === void 0 ? void 0 : _e.trim()
-                : "";
-            return { nombres, dni, digitoVerificador, apellidop, apellidom };
-        });
-        console.log("Resultados:", user);
-        yield browser.close();
-        return user;
-    });
-}
-exports.searchbydni = searchbydni;
+// export async function searchbydni(dni: string): Promise<any> {
+//   const browser = await puppeteer.launch({ headless: "new" });
+//   const page = await browser.newPage();
+//   // Navegar a la páginas
+//   await page.goto("https://eldni.com/pe/buscar-datos-por-dni");
+//   // Completar el formulario con el número de DNI
+//   await page.type("#dni", dni);
+//   // Enviar el formulario
+//   await page.click("#btn-buscar-datos-por-dni");
+//   // Esperar a que la página cargue los resultados
+//   await page.waitForSelector("#column-center");
+//   // Extraer los resultados
+//   const user = await page.evaluate(() => {
+//     const nombresElement = document.querySelector(
+//       "#column-center table tbody tr td:nth-child(2)"
+//     );
+//     const nombres = nombresElement ? nombresElement.textContent?.trim() : "";
+//     const dniElement = document.querySelector(
+//       "#column-center table tbody tr td:nth-child(1)"
+//     );
+//     const dni = dniElement ? dniElement.textContent?.trim() : "";
+//     const apellidopElement = document.querySelector(
+//       "#column-center table tbody tr td:nth-child(3)"
+//     );
+//     const apellidop = apellidopElement
+//       ? apellidopElement.textContent?.trim()
+//       : "";
+//     const apellidomElement = document.querySelector(
+//       "#column-center table tbody tr td:nth-child(4)"
+//     );
+//     const apellidom = apellidomElement
+//       ? apellidomElement.textContent?.trim()
+//       : "";
+//     const digitoVerificadorElement = document.querySelector(
+//       "#column-center table:nth-child(3) tbody tr td mark"
+//     );
+//     const digitoVerificador = digitoVerificadorElement
+//       ? digitoVerificadorElement.textContent?.trim()
+//       : "";
+//     return { nombres, dni, digitoVerificador, apellidop, apellidom };
+//   });
+//   console.log("Resultados:", user);
+//   await browser.close();
+//   return user;
+// }

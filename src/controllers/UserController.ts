@@ -13,7 +13,6 @@ import {
   updateUserDependent,
   deleteUserDependent,
   getPatients,
-  searchbydni,
 } from "../repository/UserRepository";
 import { success, failure } from "../utils/response";
 import { accessBydni, createAccessUser } from "../repository/AccessRepository";
@@ -108,22 +107,22 @@ class UserHandler {
       failure({ res, message });
     }
   }
-  public async searchbydni(req: Request, res: Response): Promise<void> {
-    try {
-      const dni = req.params.dni;
-      const user = await searchbydni(dni);
-      if (user.dni == "") {
-        failure({ res, message: "DNI no encontrado" });
-        return;
-      }
-      const message = "Operación exitosa Registro Encontrado";
-      success({ res, data: user, message });
-    } catch (error: any) {
-      console.log(error);
-      const message = error;
-      failure({ res, message });
-    }
-  }
+  // public async searchbydni(req: Request, res: Response): Promise<void> {
+  //   try {
+  //     const dni = req.params.dni;
+  //     const user = await searchbydni(dni);
+  //     if (user.dni == "") {
+  //       failure({ res, message: "DNI no encontrado" });
+  //       return;
+  //     }
+  //     const message = "Operación exitosa Registro Encontrado";
+  //     success({ res, data: user, message });
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     const message = error;
+  //     failure({ res, message });
+  //   }
+  // }
   // Actualizar datos de empleado (dni)
   public async updateUserDependent(req: Request, res: Response): Promise<void> {
     try {

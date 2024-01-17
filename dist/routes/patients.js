@@ -9,7 +9,7 @@ const UserController_1 = __importDefault(require("../controllers/UserController"
 const userHandler = new UserController_1.default();
 const router = (0, express_1.Router)();
 // Patients
-router.get("/searchbydni/:dni", userHandler.searchbydni);
+//router.get("/searchbydni/:dni", userHandler.searchbydni);
 router.post("/", userHandler.createPatient);
 router.get("/", verifyToken_1.default, userHandler.getPatients);
 exports.default = router;

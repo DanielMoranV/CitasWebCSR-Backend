@@ -9,7 +9,7 @@ const router = Router();
 
 // Patients
 
-router.get("/searchbydni/:dni", userHandler.searchbydni);
+//router.get("/searchbydni/:dni", userHandler.searchbydni);
 router.post("/", userHandler.createPatient);
 router.get("/", verifyToken, userHandler.getPatients);
 export default router;

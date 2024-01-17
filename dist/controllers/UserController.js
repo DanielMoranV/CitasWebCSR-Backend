@@ -121,25 +121,22 @@ class UserHandler {
             }
         });
     }
-    searchbydni(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dni = req.params.dni;
-                const user = yield (0, UserRepository_1.searchbydni)(dni);
-                if (user.dni == "") {
-                    (0, response_1.failure)({ res, message: "DNI no encontrado" });
-                    return;
-                }
-                const message = "Operación exitosa Registro Encontrado";
-                (0, response_1.success)({ res, data: user, message });
-            }
-            catch (error) {
-                console.log(error);
-                const message = error;
-                (0, response_1.failure)({ res, message });
-            }
-        });
-    }
+    // public async searchbydni(req: Request, res: Response): Promise<void> {
+    //   try {
+    //     const dni = req.params.dni;
+    //     const user = await searchbydni(dni);
+    //     if (user.dni == "") {
+    //       failure({ res, message: "DNI no encontrado" });
+    //       return;
+    //     }
+    //     const message = "Operación exitosa Registro Encontrado";
+    //     success({ res, data: user, message });
+    //   } catch (error: any) {
+    //     console.log(error);
+    //     const message = error;
+    //     failure({ res, message });
+    //   }
+    // }
     // Actualizar datos de empleado (dni)
     updateUserDependent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
