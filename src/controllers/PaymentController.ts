@@ -11,7 +11,7 @@ import Culqi from "culqi-node";
 const { Message } = require("whatsapp-web.js");
 import { client } from "../app";
 
-const accessToken: string = <string>process.env.ACCESS_TOKEN_CULQUI;
+const accessToken: string = <string>process.env.ACCESS_TOKEN_CULQUI || 'sk_test_8491669da1e248cf';
 const culqi = new Culqi({
   privateKey: accessToken,
 });

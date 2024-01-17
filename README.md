@@ -2,7 +2,7 @@ Instrucciones de instalación:
 
 - npm init --yes
 - npm install express dotenv
-- npm nodemon morgan -D
+- npm i nodemon morgan -D
 - npm i jsonwebtoken
 - npm i concurrently -D
 - npm install prisma
