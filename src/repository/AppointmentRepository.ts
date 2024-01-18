@@ -158,7 +158,7 @@ export async function getAppointment(): Promise<TimeSlot[]> {
   return await prisma.instance.timeSlot.findMany({
     where: {
       orderlyTurn: {
-        gte: new Date(beforeYesterday.toDateString()), // Filtrar registros a partir de anteayer
+        gte: new Date(), // Filtrar registros a partir de anteayer
       },
     },
     include: {
@@ -209,6 +209,58 @@ export async function getAppointmentDoctorId(
       Schedule: {
         day: {
           lt: new Date(today.getTime() + 24 * 60 * 60 * 1000), // Menos de 24 horas después del inicio del día
+        },
+        doctorId: doctorId,
+      },
+    },
+    include: {
+      Appointment: {
+        include: {
+          user: true,
+          dependent: {
+            include: {
+              user: true,
+            },
+          },
+          timeSlot: true,
+          appointmentServices: {
+            include: {
+              medicalService: true,
+            },
+          },
+        },
+        orderBy: {
+          createAt: "desc",
+        },
+      },
+      Schedule: {
+        include: {
+          doctor: {
+            include: {
+              user: true,
+              personalizedPrices: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      orderlyTurn: "asc",
+    },
+  });
+}
+export async function getAppointmentDoctorIdByDay(
+  doctorId: number,
+  day: Date
+): Promise<TimeSlot[]> {
+  return await prisma.instance.timeSlot.findMany({
+    where: {
+      orderlyTurn: {
+        gte: day, // Filtra registros a partir de hoy
+      },
+      Schedule: {
+        day: {
+          lt: new Date(day.getTime() + 24 * 60 * 60 * 1000), // Menos de 24 horas después del inicio del día
         },
         doctorId: doctorId,
       },

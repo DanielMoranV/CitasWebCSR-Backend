@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAppointmentDoctorId = exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.updateAppointment = exports.deleteAppointment = exports.createAppointment = exports.getAppointmentsHistoryUser = exports.getAppointmentsHistoryUserIdDoctorId = exports.updateAppointmentHistory = exports.createAppointmentHistory = void 0;
+exports.getAppointmentDoctorIdByDay = exports.getAppointmentDoctorId = exports.getAppointment = exports.getAppointmentsUserId = exports.getAppointmentId = exports.updateAppointment = exports.deleteAppointment = exports.createAppointment = exports.getAppointmentsHistoryUser = exports.getAppointmentsHistoryUserIdDoctorId = exports.updateAppointmentHistory = exports.createAppointmentHistory = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createAppointmentHistory(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -175,7 +175,7 @@ function getAppointment() {
         return yield prisma_1.default.instance.timeSlot.findMany({
             where: {
                 orderlyTurn: {
-                    gte: new Date(beforeYesterday.toDateString()), // Filtrar registros a partir de anteayer
+                    gte: new Date(), // Filtrar registros a partir de anteayer
                 },
             },
             include: {
@@ -269,3 +269,55 @@ function getAppointmentDoctorId(doctorId) {
     });
 }
 exports.getAppointmentDoctorId = getAppointmentDoctorId;
+function getAppointmentDoctorIdByDay(doctorId, day) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.timeSlot.findMany({
+            where: {
+                orderlyTurn: {
+                    gte: day, // Filtra registros a partir de hoy
+                },
+                Schedule: {
+                    day: {
+                        lt: new Date(day.getTime() + 24 * 60 * 60 * 1000), // Menos de 24 horas después del inicio del día
+                    },
+                    doctorId: doctorId,
+                },
+            },
+            include: {
+                Appointment: {
+                    include: {
+                        user: true,
+                        dependent: {
+                            include: {
+                                user: true,
+                            },
+                        },
+                        timeSlot: true,
+                        appointmentServices: {
+                            include: {
+                                medicalService: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        createAt: "desc",
+                    },
+                },
+                Schedule: {
+                    include: {
+                        doctor: {
+                            include: {
+                                user: true,
+                                personalizedPrices: true,
+                            },
+                        },
+                    },
+                },
+            },
+            orderBy: {
+                orderlyTurn: "asc",
+            },
+        });
+    });
+}
+exports.getAppointmentDoctorIdByDay = getAppointmentDoctorIdByDay;

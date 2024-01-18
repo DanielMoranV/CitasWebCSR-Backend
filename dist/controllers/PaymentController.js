@@ -18,7 +18,7 @@ const PaymentRepository_1 = require("../repository/PaymentRepository");
 const culqi_node_1 = __importDefault(require("culqi-node"));
 const { Message } = require("whatsapp-web.js");
 const app_1 = require("../app");
-const accessToken = process.env.ACCESS_TOKEN_CULQUI || 'sk_test_8491669da1e248cf';
+const accessToken = process.env.ACCESS_TOKEN_CULQUI;
 const culqi = new culqi_node_1.default({
     privateKey: accessToken,
 });
