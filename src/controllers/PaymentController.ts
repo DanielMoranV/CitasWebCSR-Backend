@@ -98,8 +98,9 @@ class PaymentHandler {
         // } else {
         //   console.log("Inicie sesion wp");
         // }
-        const formattedNumber = `+51${data.client.phone}`;
-        await sendSMS(formattedNumber, msgwp);
+        //const formattedNumber = `+51${data.client.phone}`;
+        //await sendSMS(formattedNumber, msgwp);
+        console.log("mensaje wp enviado");
         const newPayment = await createPayment(data.metadata);
         const message = "Operación exitosa Registro Creado";
         success({ res, data: newPayment, message });
