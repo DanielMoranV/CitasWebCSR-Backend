@@ -106,6 +106,29 @@ export async function getTodayCashRegisterForAdmissionist(
     },
   });
 }
+export async function getByDateCashRegister(
+  date: Date
+): Promise<CashRegister[] | null> {
+  return await prisma.instance.cashRegister.findMany({
+    where: {
+      createAt: {
+        gt: date,
+        lt: new Date(date.getTime() + 24 * 60 * 60 * 1000),
+      },
+    },
+    orderBy: {
+      createAt: "asc",
+    },
+    include: {
+      Admissionist: {
+        include: {
+          user: true,
+        },
+      },
+      cashRegisterTransactions: true,
+    },
+  });
+}
 export async function getCashRegisterForAdmissionist(
   admissionistId: number
 ): Promise<CashRegister | null> {

@@ -10,6 +10,7 @@ import {
   getPreviousCashRegisterForAdmissionist,
   createCashRegisterTransaction,
   sumIngressAmountByCashRegisterId,
+  getByDateCashRegister,
 } from "../repository/CashRegisterRepository";
 import { success, failure } from "../utils/response";
 
@@ -113,6 +114,27 @@ class CashRegisterHandler {
         success({ res, data: null, message });
       }
     } catch (error: any) {
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async getByDateCashRegister(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const date = new Date(req.params.date);
+      console.log(date);
+      const cashRegister = await getByDateCashRegister(date);
+      if (cashRegister) {
+        const message = "Operación exitosa Registro Encontrado";
+        success({ res, data: cashRegister, message });
+      } else {
+        const message = "Operación exitosa No se encontraron resultados";
+        success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      console.log(error);
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });
     }

@@ -92,11 +92,12 @@ class PaymentHandler {
         `Gracias por confiar en nosotros. ¡Te esperamos!`;
 
       if (chargeCreated) {
-        if (await isConnectionAvailable()) {
-          await sendMessageWp(data.client.phone, msgwp);
-        } else {
-          console.log("Inicie sesion wp");
-        }
+        await sendMessageWp(data.client.phone, msgwp);
+        // if (await isConnectionAvailable()) {
+        //   await sendMessageWp(data.client.phone, msgwp);
+        // } else {
+        //   console.log("Inicie sesion wp");
+        // }
         const formattedNumber = `+51${data.client.phone}`;
         await sendSMS(formattedNumber, msgwp);
         const newPayment = await createPayment(data.metadata);

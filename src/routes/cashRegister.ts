@@ -17,6 +17,7 @@ router.get(
   "/todayforadmissionist/:admissionistId",
   cashRegisterHandler.getTodayCashRegisterForAdmissionist
 );
+router.get("/bydate/:date", cashRegisterHandler.getByDateCashRegister);
 router.get(
   "/previousforadmissionist/:admissionistId",
   cashRegisterHandler.getPreviousCashRegisterForAdmissionist

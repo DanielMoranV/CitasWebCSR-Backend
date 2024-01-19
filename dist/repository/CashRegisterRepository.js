@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCashRegister = exports.getCashRegisterForAdmissionist = exports.getTodayCashRegisterForAdmissionist = exports.sumIngressAmountByCashRegisterId = exports.getPreviousCashRegisterForAdmissionist = exports.getCashRegisterId = exports.getCashRegisters = exports.createCashRegisterTransaction = exports.createCashRegister = void 0;
+exports.updateCashRegister = exports.getCashRegisterForAdmissionist = exports.getByDateCashRegister = exports.getTodayCashRegisterForAdmissionist = exports.sumIngressAmountByCashRegisterId = exports.getPreviousCashRegisterForAdmissionist = exports.getCashRegisterId = exports.getCashRegisters = exports.createCashRegisterTransaction = exports.createCashRegister = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createCashRegister(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -125,6 +125,30 @@ function getTodayCashRegisterForAdmissionist(admissionistId) {
     });
 }
 exports.getTodayCashRegisterForAdmissionist = getTodayCashRegisterForAdmissionist;
+function getByDateCashRegister(date) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield prisma_1.default.instance.cashRegister.findMany({
+            where: {
+                createAt: {
+                    gt: date,
+                    lt: new Date(date.getTime() + 24 * 60 * 60 * 1000),
+                },
+            },
+            orderBy: {
+                createAt: "asc",
+            },
+            include: {
+                Admissionist: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cashRegisterTransactions: true,
+            },
+        });
+    });
+}
+exports.getByDateCashRegister = getByDateCashRegister;
 function getCashRegisterForAdmissionist(admissionistId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield prisma_1.default.instance.cashRegister.findFirst({
