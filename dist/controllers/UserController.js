@@ -175,7 +175,6 @@ class UserHandler {
             const username = req.body.dni;
             const password = yield (0, strings_1.hashPassword)(username);
             try {
-                console.log(dataPatients);
                 dataPatients.access = {
                     username,
                     password,

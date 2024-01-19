@@ -21,12 +21,15 @@ class AccesHandler {
     try {
       const username = req.params.username;
       let data = req.body;
-      data.password = await hashPassword(req.body.password);
+      data.password = await hashPassword(req.params.username);
+      data.roleId = Number(data.roleId);
       data.createAt = new Date();
       const user = await userBydni(username);
       if (user) {
         data = {
           username,
+          status: "offline",
+          active: true,
           userId: user.userId,
           ...data,
         };

@@ -24,11 +24,12 @@ class AccesHandler {
             try {
                 const username = req.params.username;
                 let data = req.body;
-                data.password = yield (0, strings_1.hashPassword)(req.body.password);
+                data.password = yield (0, strings_1.hashPassword)(req.params.username);
+                data.roleId = Number(data.roleId);
                 data.createAt = new Date();
                 const user = yield (0, UserRepository_1.userBydni)(username);
                 if (user) {
-                    data = Object.assign({ username, userId: user.userId }, data);
+                    data = Object.assign({ username, status: "offline", active: true, userId: user.userId }, data);
                     let newAccessUser = yield (0, AccessRepository_1.createAccessUser)(data);
                     console.log(newAccessUser);
                     const message = "Operación exitosa Registro Acceso Creado";

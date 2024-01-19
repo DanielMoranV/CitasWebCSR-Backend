@@ -155,7 +155,6 @@ class UserHandler {
     const password = await hashPassword(username);
 
     try {
-      console.log(dataPatients);
       dataPatients.access = {
         username,
         password,

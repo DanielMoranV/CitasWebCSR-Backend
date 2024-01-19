@@ -211,6 +211,7 @@ export async function getAppointmentDoctorId(
           lt: new Date(today.getTime() + 24 * 60 * 60 * 1000), // Menos de 24 horas después del inicio del día
         },
         doctorId: doctorId,
+        availableSchedule: true,
       },
     },
     include: {
