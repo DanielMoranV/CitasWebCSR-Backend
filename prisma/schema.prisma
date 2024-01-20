@@ -273,3 +273,11 @@ model Doctor {
 
   @@map(name: "doctor")
 }
+
+model Connection {
+  connectionId Int     @id @default(autoincrement()) @map(name: "connection_id")
+  service      String  @map(name: "service")
+  available    Boolean @default(false) @map(name: "available")
+
+  @@map(name: "connection")
+}

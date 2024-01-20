@@ -1,5 +1,4 @@
 "use strict";
-// connection/whatsappweb.ts
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -28,12 +27,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createWhatsAppClient = void 0;
+// connection/whatsappweb.ts
 const { Client } = require("whatsapp-web.js");
+const ConnectionRepository_1 = require("../repository/ConnectionRepository");
 const qr_image_1 = __importDefault(require("qr-image"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const app_1 = require("../app");
 const QRCodeTerminal = __importStar(require("qrcode-terminal"));
+const connectionId = 1;
 const createWhatsAppClient = () => {
     const client = new Client();
     const dir = path_1.default.join(__dirname, "../public/imgqrwp");
@@ -48,16 +50,29 @@ const createWhatsAppClient = () => {
         console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
         app_1.io.emit("newQr", qr);
         console.log("Qr io emitido");
+        (0, ConnectionRepository_1.updateAvailableConnection)(connectionId, { available: false });
     });
     client.on("ready", () => {
         console.log(`🔥 WhatsApp Web API ready!`);
         let wpReady = true;
+        (0, ConnectionRepository_1.updateAvailableConnection)(connectionId, { available: wpReady });
         app_1.io.emit("wpReady", wpReady);
     });
     client.on("message", (msg) => {
         if (msg.body === "!ping") {
             msg.reply("pong");
         }
+    });
+    client.on("error", (error) => {
+        console.error("Error en la sesión de WhatsApp:", error);
+        // Aquí puedes tomar acciones adicionales según el tipo de error.
+        (0, ConnectionRepository_1.updateAvailableConnection)(connectionId, { available: false });
+        app_1.io.emit("wpError", error.message); // Emite un evento indicando el error a tu frontend, por ejemplo.
+    });
+    client.on("disconnected", (reason) => {
+        console.log("Desconectado por la razón:", reason);
+        (0, ConnectionRepository_1.updateAvailableConnection)(connectionId, { available: false });
+        app_1.io.emit("wpDisconnected", reason); // Emite un evento indicando la desconexión a tu frontend.
     });
     return client;
 };
