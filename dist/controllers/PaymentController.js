@@ -13,8 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errormessagebycode_1 = require("../midlewares/errormessagebycode");
+const twilioService_1 = require("../connection/twilioService");
 const response_1 = require("../utils/response");
 const PaymentRepository_1 = require("../repository/PaymentRepository");
+const ConnectionRepository_1 = require("../repository/ConnectionRepository");
 const culqi_node_1 = __importDefault(require("culqi-node"));
 const { Message } = require("whatsapp-web.js");
 const accessToken = process.env.ACCESS_TOKEN_CULQUI;
@@ -78,9 +80,35 @@ class PaymentHandler {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
             try {
-                const newPayment = yield (0, PaymentRepository_1.createCharge)(data);
-                const message = "Operación exitosa Registro Creado";
-                (0, response_1.success)({ res, data: newPayment, message });
+                //const chargeCreated = await createCharge(data);
+                const chargeCreated = true;
+                const msgwp = `¡Cita médica reservada con éxito en Clínica Santa Rosa! 🏥📅\n\n` +
+                    `Paciente: *${data.dataPayment.patient}*\n` +
+                    `Médico: *${data.dataPayment.nameDoctor}*\n` +
+                    `Especialidad: *${data.dataPayment.specialty}*\n` +
+                    `Horario: *${data.dataPayment.date}*\n` +
+                    `Costo: *S/.${data.dataPayment.price}*\n` +
+                    `Call Center: *985 586 350*\n` +
+                    `Dirección de la clínica: *Av. Panamericana N° 332 - Urb. Santa Rosa, Sullana*\n\n` +
+                    `Gracias por confiar en nosotros. ¡Te esperamos!`;
+                if (chargeCreated) {
+                    if (yield (0, ConnectionRepository_1.isConnectionAvailable)(1)) {
+                        yield (0, ConnectionRepository_1.sendMessageWp)(data.client.phone, msgwp);
+                    }
+                    else {
+                        console.log("Inicie sesion wp");
+                    }
+                    const formattedNumber = `+51${data.client.phone}`;
+                    yield (0, twilioService_1.sendSMS)(formattedNumber, msgwp);
+                    const newPayment = yield (0, PaymentRepository_1.createPayment)(data.metadata);
+                    const message = "Operación exitosa Registro Creado";
+                    (0, response_1.success)({ res, data: newPayment, message });
+                    // Otros pasos, como enviar mensajes de WhatsApp, si es necesario
+                }
+                else {
+                    // Manejar el caso en que el cargo no se creó correctamente
+                    (0, response_1.failure)({ res, message: "Error en la creación del cargo." });
+                }
             }
             catch (error) {
                 console.log(error);

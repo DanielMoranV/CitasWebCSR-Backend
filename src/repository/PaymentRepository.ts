@@ -4,32 +4,43 @@ import axios from "axios";
 
 const CULQI_ACCESS_TOKEN = process.env.ACCESS_TOKEN_CULQUI;
 
-export async function createCharge(data: any) {
-  const options = {
-    method: "POST",
-    url: "https://api.culqi.com/v2/charges",
-    timeout: 5000,
-    headers: {
-      Authorization: `Bearer ${CULQI_ACCESS_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data: {
-      amount: data.metadata.amount,
-      currency_code: "PEN",
-      email: data.email,
-      source_id: data.id,
-      antifraud_details: {
-        address: data.client.address,
-        address_city: "Piura",
-        country_code: "PE",
-        first_name: data.client.name,
-        last_name: data.client.surnames,
-        phone: data.client.phone,
+export async function createCharge(data: any): Promise<boolean> {
+  try {
+    const options = {
+      method: "POST",
+      url: "https://api.culqi.com/v2/charges",
+      timeout: 5000,
+      headers: {
+        Authorization: `Bearer ${CULQI_ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    },
-  };
-  const culqiResponse = await axios(options);
-  return culqiResponse;
+      data: {
+        amount: data.metadata.amount,
+        currency_code: "PEN",
+        email: data.email,
+        source_id: data.id,
+        antifraud_details: {
+          address: data.client.address,
+          address_city: "Piura",
+          country_code: "PE",
+          first_name: data.client.name,
+          last_name: data.client.surnames,
+          phone: data.client.phone,
+        },
+      },
+    };
+
+    const culqiResponse = await axios(options);
+
+    // Verificar si el cargo se creó correctamente
+    if (culqiResponse.status === 201) {
+      return true;
+    } else {
+      throw new Error("Error en la creación del cargo.");
+    }
+  } catch (error) {
+    throw error; // Relanzar la excepción para que pueda ser manejada en createPayment
+  }
 }
 export async function createPaymentCash(data: any): Promise<Payment> {
   console.log(data);

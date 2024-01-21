@@ -83,7 +83,7 @@ function getInfoDoctors() {
     JOIN public.doctor USING(user_id)
     JOIN public.personalized_price USING(doctor_id)
     JOIN public.medical_service USING(medical_service_id)
-    WHERE medical_service.code = '50.00.00' AND access.active = true
+    WHERE medical_service.code = '50.00.00' AND access.active = true AND doctor.status = true
   `;
     });
 }

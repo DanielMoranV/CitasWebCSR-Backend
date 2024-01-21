@@ -10,6 +10,7 @@ import path from "path";
 //Whatsappweb;
 const client = createWhatsAppClient();
 client.initialize();
+// Función para verificar si hay una sesión activa
 
 //Routes
 import { useRouter } from "./routes";

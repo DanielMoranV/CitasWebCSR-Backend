@@ -17,6 +17,7 @@ const prisma_1 = __importDefault(require("../connection/prisma"));
 const app_1 = require("../app");
 function updateAvailableConnection(connectionId, data) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("holi actualizando");
         return yield prisma_1.default.instance.connection.update({
             where: { connectionId },
             data,
@@ -24,20 +25,22 @@ function updateAvailableConnection(connectionId, data) {
     });
 }
 exports.updateAvailableConnection = updateAvailableConnection;
-function isConnectionAvailable(connectionId) {
+// export async function isConnectionAvailable(
+//   connectionId: number
+// ): Promise<any> {
+//   console.log("holi consultando");
+//   // Consulta el estado de la conexión en la base de datos
+//   const connection = await prisma.instance.connection.findUnique({
+//     where: { connectionId },
+//     select: { available: true },
+//   });
+//   console.log("prisma", connection);
+//   // Devuelve true si la conexión está disponible, de lo contrario, false
+//   return connection?.available;
+// }
+function isConnectionAvailable() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // Consulta el estado de la conexión en la base de datos
-            const connection = yield prisma_1.default.instance.connection.findUnique({
-                where: { connectionId },
-            });
-            // Devuelve true si la conexión está disponible, de lo contrario, false
-            return (connection === null || connection === void 0 ? void 0 : connection.available) || false;
-        }
-        catch (error) {
-            console.error("Error al consultar el estado de la conexión:", error);
-            return false; // En caso de error, asume que la conexión no está disponible
-        }
+        return app_1.client.session ? true : false;
     });
 }
 exports.isConnectionAvailable = isConnectionAvailable;

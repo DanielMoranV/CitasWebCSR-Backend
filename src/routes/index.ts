@@ -13,6 +13,7 @@ import imgqrwp from "./imageQrWhatsapp";
 import imgusers from "./imageUsers";
 import documentation from "./documentation";
 import cashRegister from "./cashRegister";
+import connection from "./connection";
 
 export async function useRouter(app: Express, api_url: string) {
   //version 1
@@ -46,6 +47,9 @@ export async function useRouter(app: Express, api_url: string) {
 
   //Cash Register
   router.use("/cashregister", verifyToken, cashRegister);
+
+  //Connection
+  router.use("/connection", connection);
 
   app.use(api_url, router);
 }

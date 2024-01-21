@@ -30,6 +30,7 @@
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "ts-node": "^10.9.1",
+    "twilio": "^4.20.1",
     "typescript": "^5.2.2",
     "whatsapp-web.js": "^1.23.0"
   },

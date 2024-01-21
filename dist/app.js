@@ -16,6 +16,7 @@ const path_1 = __importDefault(require("path"));
 const client = (0, whatsappweb_1.createWhatsAppClient)();
 exports.client = client;
 client.initialize();
+// Función para verificar si hay una sesión activa
 //Routes
 const routes_1 = require("./routes");
 const app = (0, express_1.default)();

@@ -16,7 +16,7 @@ const createWhatsAppClient = () => {
     fs.mkdirSync(dir);
   }
 
-  client.on("qr", (qr: any) => {
+  client.on("qr", async (qr: any) => {
     // Genera una representación del código QR en la consola
     QRCodeTerminal.generate(qr, { small: true });
 
@@ -25,14 +25,11 @@ const createWhatsAppClient = () => {
     console.log("⚡ Recuerda que el QR se actualiza cada minuto ⚡");
     io.emit("newQr", qr);
     console.log("Qr io emitido");
-    updateAvailableConnection(connectionId, { available: false });
   });
 
-  client.on("ready", () => {
+  client.on("ready", async () => {
     console.log(`🔥 WhatsApp Web API ready!`);
-
     let wpReady = true;
-    updateAvailableConnection(connectionId, { available: wpReady });
     io.emit("wpReady", wpReady);
   });
 
@@ -44,18 +41,16 @@ const createWhatsAppClient = () => {
       }
     }
   );
-  client.on("error", (error: any) => {
+  client.on("error", async (error: any) => {
     console.error("Error en la sesión de WhatsApp:", error);
-    // Aquí puedes tomar acciones adicionales según el tipo de error.
-    updateAvailableConnection(connectionId, { available: false });
+    console.log("error false");
     io.emit("wpError", error.message); // Emite un evento indicando el error a tu frontend, por ejemplo.
   });
-  client.on("disconnected", (reason: any) => {
+  client.on("disconnected", async (reason: any) => {
     console.log("Desconectado por la razón:", reason);
-    updateAvailableConnection(connectionId, { available: false });
     io.emit("wpDisconnected", reason); // Emite un evento indicando la desconexión a tu frontend.
   });
-
+  console.log(client);
   return client;
 };
 
