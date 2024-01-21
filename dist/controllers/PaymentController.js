@@ -92,7 +92,7 @@ class PaymentHandler {
                     `Dirección de la clínica: *Av. Panamericana N° 332 - Urb. Santa Rosa, Sullana*\n\n` +
                     `Gracias por confiar en nosotros. ¡Te esperamos!`;
                 if (chargeCreated) {
-                    if (yield (0, ConnectionRepository_1.isConnectionAvailable)(1)) {
+                    if (yield (0, ConnectionRepository_1.isConnectionAvailable)()) {
                         yield (0, ConnectionRepository_1.sendMessageWp)(data.client.phone, msgwp);
                     }
                     else {

@@ -92,7 +92,7 @@ class PaymentHandler {
         `Gracias por confiar en nosotros. ¡Te esperamos!`;
 
       if (chargeCreated) {
-        if (await isConnectionAvailable(1)) {
+        if (await isConnectionAvailable()) {
           await sendMessageWp(data.client.phone, msgwp);
         } else {
           console.log("Inicie sesion wp");
