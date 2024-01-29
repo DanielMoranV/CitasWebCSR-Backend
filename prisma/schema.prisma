@@ -79,7 +79,7 @@ model Appointment {
   doctorId      Int      @map(name: "doctor_id")
   userId        Int?     @map(name: "user_id")
   dependentId   Int?     @map(name: "dependent_id")
-  timeSlotId    Int      @unique @map(name: "time_slot_id")
+  timeSlotId    Int?     @unique @map(name: "time_slot_id")
 
   appointmentServices  AppointmentService[]
   appointmentHistories AppointmentHistory[]
@@ -87,7 +87,7 @@ model Appointment {
   doctor               Doctor               @relation(fields: [doctorId], references: [doctorId])
   user                 User?                @relation(fields: [userId], references: [userId])
   dependent            Dependent?           @relation(fields: [dependentId], references: [dependentId])
-  timeSlot             TimeSlot             @relation(fields: [timeSlotId], references: [timeSlotId])
+  timeSlot             TimeSlot?            @relation(fields: [timeSlotId], references: [timeSlotId])
 
   @@map(name: "appointment")
 }

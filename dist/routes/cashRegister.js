@@ -16,5 +16,6 @@ router.get("/todayforadmissionist/:admissionistId", cashRegisterHandler.getToday
 router.get("/bydate/:date", cashRegisterHandler.getByDateCashRegister);
 router.get("/previousforadmissionist/:admissionistId", cashRegisterHandler.getPreviousCashRegisterForAdmissionist);
 router.get("/sumIngressAmountByCashRegisterId/:cashRegisterId", cashRegisterHandler.sumIngressAmountByCashRegisterId);
+router.get("/sumEgressAmountByCashRegisterId/:cashRegisterId", cashRegisterHandler.sumEgressAmountByCashRegisterId);
 router.get("/admissionist/:admissionistId", cashRegisterHandler.getCashRegisterForAdmissionist);
 exports.default = router;

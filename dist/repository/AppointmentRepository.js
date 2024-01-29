@@ -288,6 +288,7 @@ function getAppointmentDoctorIdByDay(doctorId, day) {
                 Appointment: {
                     include: {
                         user: true,
+                        payments: true,
                         dependent: {
                             include: {
                                 user: true,

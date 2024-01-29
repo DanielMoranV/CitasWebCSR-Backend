@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errormessagebycode_1 = require("../midlewares/errormessagebycode");
-const twilioService_1 = require("../connection/twilioService");
 const response_1 = require("../utils/response");
 const PaymentRepository_1 = require("../repository/PaymentRepository");
 const ConnectionRepository_1 = require("../repository/ConnectionRepository");
@@ -92,14 +91,15 @@ class PaymentHandler {
                     `Dirección de la clínica: *Av. Panamericana N° 332 - Urb. Santa Rosa, Sullana*\n\n` +
                     `Gracias por confiar en nosotros. ¡Te esperamos!`;
                 if (chargeCreated) {
-                    if (yield (0, ConnectionRepository_1.isConnectionAvailable)()) {
-                        yield (0, ConnectionRepository_1.sendMessageWp)(data.client.phone, msgwp);
-                    }
-                    else {
-                        console.log("Inicie sesion wp");
-                    }
-                    const formattedNumber = `+51${data.client.phone}`;
-                    yield (0, twilioService_1.sendSMS)(formattedNumber, msgwp);
+                    yield (0, ConnectionRepository_1.sendMessageWp)(data.client.phone, msgwp);
+                    // if (await isConnectionAvailable()) {
+                    //   await sendMessageWp(data.client.phone, msgwp);
+                    // } else {
+                    //   console.log("Inicie sesion wp");
+                    // }
+                    //const formattedNumber = `+51${data.client.phone}`;
+                    //await sendSMS(formattedNumber, msgwp);
+                    console.log("mensaje wp enviado");
                     const newPayment = yield (0, PaymentRepository_1.createPayment)(data.metadata);
                     const message = "Operación exitosa Registro Creado";
                     (0, response_1.success)({ res, data: newPayment, message });

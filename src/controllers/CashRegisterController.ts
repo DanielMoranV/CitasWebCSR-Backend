@@ -11,6 +11,7 @@ import {
   createCashRegisterTransaction,
   sumIngressAmountByCashRegisterId,
   getByDateCashRegister,
+  sumEgressAmountByCashRegisterId,
 } from "../repository/CashRegisterRepository";
 import { success, failure } from "../utils/response";
 
@@ -82,6 +83,29 @@ class CashRegisterHandler {
       const cashRegisterId = Number(req.params.cashRegisterId);
       console.log(cashRegisterId);
       const cashRegister = await sumIngressAmountByCashRegisterId(
+        cashRegisterId
+      );
+      if (cashRegister) {
+        const message = "Operación exitosa Registro Encontrado";
+        success({ res, data: cashRegister, message });
+      } else {
+        const message = "Operación exitosa No se encontraron resultados";
+        success({ res, data: null, message });
+      }
+    } catch (error: any) {
+      console.log(error);
+      const message = getErrorMessageByCode(error.code);
+      failure({ res, message });
+    }
+  }
+  public async sumEgressAmountByCashRegisterId(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const cashRegisterId = Number(req.params.cashRegisterId);
+      console.log(cashRegisterId);
+      const cashRegister = await sumEgressAmountByCashRegisterId(
         cashRegisterId
       );
       if (cashRegister) {

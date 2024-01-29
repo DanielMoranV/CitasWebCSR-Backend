@@ -83,7 +83,21 @@ export async function sumIngressAmountByCashRegisterId(
 
   return result._sum?.amount || 0; // Devolver la suma total o 0 si no hay registros
 }
+export async function sumEgressAmountByCashRegisterId(
+  cashRegisterId: number
+): Promise<number> {
+  const result = await prisma.instance.cashRegisterTransaction.aggregate({
+    where: {
+      cashRegisterId,
+      transactionType: "Egreso",
+    },
+    _sum: {
+      amount: true,
+    },
+  });
 
+  return result._sum?.amount || 0; // Devolver la suma total o 0 si no hay registros
+}
 export async function getTodayCashRegisterForAdmissionist(
   admissionistId: number
 ): Promise<CashRegister | null> {
@@ -117,7 +131,7 @@ export async function getByDateCashRegister(
       },
     },
     orderBy: {
-      createAt: "asc",
+      cashRegisterId: "asc",
     },
     include: {
       Admissionist: {

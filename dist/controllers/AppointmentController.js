@@ -101,7 +101,10 @@ class AppointmentHandler {
                 const appointmentId = Number(req.params.appointmentId);
                 const { timeSlotId } = yield (0, AppointmentRepository_1.getAppointmentId)(appointmentId);
                 yield (0, DoctorsRepository_1.updateTimeSlot)(Number(timeSlotId), { availableTurn: true });
-                const appointment = yield (0, AppointmentRepository_1.deleteAppointment)(appointmentId);
+                const appointment = yield (0, AppointmentRepository_1.updateAppointment)(appointmentId, {
+                    status: "Anulado",
+                    timeSlotId: null,
+                });
                 const message = "Operación exitosa Registro Eliminado";
                 // trabajar cuando no encuentra dni
                 (0, response_1.success)({ res, data: appointment, message });

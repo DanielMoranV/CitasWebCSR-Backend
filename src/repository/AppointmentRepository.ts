@@ -270,6 +270,7 @@ export async function getAppointmentDoctorIdByDay(
       Appointment: {
         include: {
           user: true,
+          payments: true,
           dependent: {
             include: {
               user: true,

@@ -105,6 +105,28 @@ class CashRegisterHandler {
             }
         });
     }
+    sumEgressAmountByCashRegisterId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const cashRegisterId = Number(req.params.cashRegisterId);
+                console.log(cashRegisterId);
+                const cashRegister = yield (0, CashRegisterRepository_1.sumEgressAmountByCashRegisterId)(cashRegisterId);
+                if (cashRegister) {
+                    const message = "Operación exitosa Registro Encontrado";
+                    (0, response_1.success)({ res, data: cashRegister, message });
+                }
+                else {
+                    const message = "Operación exitosa No se encontraron resultados";
+                    (0, response_1.success)({ res, data: null, message });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                const message = (0, errormessagebycode_1.getErrorMessageByCode)(error.code);
+                (0, response_1.failure)({ res, message });
+            }
+        });
+    }
     getTodayCashRegisterForAdmissionist(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

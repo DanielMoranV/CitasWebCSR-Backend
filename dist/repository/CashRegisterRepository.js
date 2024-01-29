@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCashRegister = exports.getCashRegisterForAdmissionist = exports.getByDateCashRegister = exports.getTodayCashRegisterForAdmissionist = exports.sumIngressAmountByCashRegisterId = exports.getPreviousCashRegisterForAdmissionist = exports.getCashRegisterId = exports.getCashRegisters = exports.createCashRegisterTransaction = exports.createCashRegister = void 0;
+exports.updateCashRegister = exports.getCashRegisterForAdmissionist = exports.getByDateCashRegister = exports.getTodayCashRegisterForAdmissionist = exports.sumEgressAmountByCashRegisterId = exports.sumIngressAmountByCashRegisterId = exports.getPreviousCashRegisterForAdmissionist = exports.getCashRegisterId = exports.getCashRegisters = exports.createCashRegisterTransaction = exports.createCashRegister = void 0;
 const prisma_1 = __importDefault(require("../connection/prisma"));
 function createCashRegister(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -103,6 +103,22 @@ function sumIngressAmountByCashRegisterId(cashRegisterId) {
     });
 }
 exports.sumIngressAmountByCashRegisterId = sumIngressAmountByCashRegisterId;
+function sumEgressAmountByCashRegisterId(cashRegisterId) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prisma_1.default.instance.cashRegisterTransaction.aggregate({
+            where: {
+                cashRegisterId,
+                transactionType: "Egreso",
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+        return ((_a = result._sum) === null || _a === void 0 ? void 0 : _a.amount) || 0; // Devolver la suma total o 0 si no hay registros
+    });
+}
+exports.sumEgressAmountByCashRegisterId = sumEgressAmountByCashRegisterId;
 function getTodayCashRegisterForAdmissionist(admissionistId) {
     return __awaiter(this, void 0, void 0, function* () {
         const today = new Date();
@@ -135,7 +151,7 @@ function getByDateCashRegister(date) {
                 },
             },
             orderBy: {
-                createAt: "asc",
+                cashRegisterId: "asc",
             },
             include: {
                 Admissionist: {

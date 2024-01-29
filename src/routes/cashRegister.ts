@@ -27,6 +27,10 @@ router.get(
   cashRegisterHandler.sumIngressAmountByCashRegisterId
 );
 router.get(
+  "/sumEgressAmountByCashRegisterId/:cashRegisterId",
+  cashRegisterHandler.sumEgressAmountByCashRegisterId
+);
+router.get(
   "/admissionist/:admissionistId",
   cashRegisterHandler.getCashRegisterForAdmissionist
 );

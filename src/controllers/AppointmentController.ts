@@ -96,7 +96,10 @@ class AppointmentHandler {
       const appointmentId = Number(req.params.appointmentId);
       const { timeSlotId } = await getAppointmentId(appointmentId);
       await updateTimeSlot(Number(timeSlotId), { availableTurn: true });
-      const appointment = await deleteAppointment(appointmentId);
+      const appointment = await updateAppointment(appointmentId, {
+        status: "Anulado",
+        timeSlotId: null,
+      });
       const message = "Operación exitosa Registro Eliminado";
       // trabajar cuando no encuentra dni
       success({ res, data: appointment, message });
