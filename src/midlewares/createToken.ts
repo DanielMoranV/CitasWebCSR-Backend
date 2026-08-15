@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 export async function createToken(username: string): Promise<any> {
   const secret: any = process.env.JWT_KEY;
-  const token = jwt.sign({ username }, secret);
+  // Los tokens deben caducar: sin expiresIn quedan válidos indefinidamente.
+  const token = jwt.sign({ username }, secret, { expiresIn: "8h" });
   return token;
 }

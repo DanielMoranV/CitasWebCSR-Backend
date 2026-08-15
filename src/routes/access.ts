@@ -7,7 +7,8 @@ const accesHandler = new AccesHandler();
 const router = Router();
 
 // Routes Access
-router.post("/:username", accesHandler.createAccessUser);
+// El alta de accesos crea credenciales y asigna rol: exige sesión válida.
+router.post("/:username", verifyToken, accesHandler.createAccessUser);
 router.post("/", accesHandler.loginUser);
 router.get("/", verifyToken, accesHandler.getAccess);
 router.get("/:username", verifyToken, accesHandler.getAccessUser);

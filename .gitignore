@@ -1,3 +1,17 @@
 node_modules
+
 # Keep environment variables out of version control
 .env
+.env.*
+!.env.example
+
+# Build output
+dist
+
+# Sesión y caché de whatsapp-web.js (contiene credenciales de sesión)
+.wwebjs_auth
+.wwebjs_cache
+
+# Archivos temporales y QR de vinculación generados en runtime
+tmp
+src/public/imgqrwp

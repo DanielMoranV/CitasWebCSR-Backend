@@ -15,6 +15,14 @@ import { createToken } from "../midlewares/createToken";
 // Login de empleados
 // --------------------------------
 
+// Nunca devolver el hash de la contraseña al cliente
+function omitPassword<T extends { password?: unknown }>(
+  access: T
+): Omit<T, "password"> {
+  const { password, ...rest } = access;
+  return rest;
+}
+
 class AccesHandler {
   // Crear nuevo acceso de  empleado
   public async createAccessUser(req: Request, res: Response): Promise<void> {
@@ -26,17 +34,18 @@ class AccesHandler {
       data.createAt = new Date();
       const user = await userBydni(username);
       if (user) {
+        // Los campos de identidad los fija el servidor, no el cliente: van
+        // después del spread para que el body no pueda sobrescribirlos.
         data = {
+          ...data,
           username,
           status: "offline",
           active: true,
           userId: user.userId,
-          ...data,
         };
         let newAccessUser = await createAccessUser(data);
-        console.log(newAccessUser);
         const message = "Operación exitosa Registro Acceso Creado";
-        success({ res, data: newAccessUser, message });
+        success({ res, data: omitPassword(newAccessUser), message });
       } else {
         const message = "dni no existe";
         failure({ res, message });
@@ -68,7 +77,7 @@ class AccesHandler {
         if (comparePass) {
           await updateLastSession(access.username);
           const token = await createToken(username);
-          success({ res, data: { ...access, token } });
+          success({ res, data: { ...omitPassword(access), token } });
         } else {
           failure({ res, message: "Clave incorrecta" });
         }
@@ -82,7 +91,7 @@ class AccesHandler {
   // Lista de datos de acceso empleados
   public async getAccess(req: Request, res: Response): Promise<void> {
     try {
-      const access = await getAccess();
+      const access = (await getAccess()).map(omitPassword);
       if (access.length != 0) {
         const message = "Operación exitosa Lista de Accesos";
         success({ res, data: access, message });
@@ -103,7 +112,7 @@ class AccesHandler {
       const access = await accessBydni(username);
       if (access) {
         const message = "Operación exitosa Registro Encontrado";
-        success({ res, data: access, message });
+        success({ res, data: omitPassword(access), message });
       } else {
         const message = "Operación exitosa No se encontraron resultados";
         success({ res, data: null, message });
@@ -141,7 +150,7 @@ class AccesHandler {
 
       const access = await updateAccessId(accessId, data);
       const message = "Operación exitosa Registro Actualizado";
-      success({ res, data: access, message });
+      success({ res, data: omitPassword(access), message });
     } catch (error: any) {
       const message = getErrorMessageByCode(error.code);
       failure({ res, message });

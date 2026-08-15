@@ -13,11 +13,10 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
   jwt.verify(token, JWT_KEY, (err) => {
     if (err) {
+      // No exponer el secreto de firma, el token recibido ni el detalle del
+      // error: filtrarlos permitiría forjar tokens válidos de cualquier usuario.
       return res.status(401).send({
         message: "Tu sesión ha expirado",
-        token,
-        JWT_KEY,
-        err,
       });
     }
     const decoded = jwt.decode(token) as JwtPayload;
